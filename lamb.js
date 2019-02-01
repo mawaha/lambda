@@ -1,5 +1,4 @@
 const { K, Id } = require('./combinators.js')
-const { toInt } = require('./utils.js')
 
 // Takes no arguments and returns no value
 const Nothing = () => {}
