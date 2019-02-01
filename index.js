@@ -16,6 +16,7 @@ const setEncoding = stdin => {
 }
 
 const getInput = callback => stdin => {
+	console.log('Please enter a number.\nType "exit" to quit.');
 	stdin.on('data', callback)
 }
 
