@@ -27,8 +27,12 @@ A variable, an application, or another expression.
 | Application | fx     | f(x)       |
 | Expression  | λx.x   | x => x     |
 
-The Lambda symbol λ represents a function which has two parts, the arguments on the left, and the body on the right.
-Lambda functions only accept one argument, as such λab is shorthand for λa.λb
-Any variable in the body of the function, for example x in λx.x, that is declared in the function arguments is considered 'bound'.
-Any variable that does not, for example y in λx.xy, is considered free.
+The Lambda symbol `λ` represents a function which has two parts, the arguments on the left, and the body on the right.
+
+Lambda functions only accept one argument, as such `λab` is shorthand for `λa.λb`
+
+Any variable in the body of the function, for example `x` in `λx.x`, that is declared in the function arguments is considered 'bound'.
+
+Any variable that does not, for example `y` in `λx.xy`, is considered free.
+
 A function that contains only 'bound' variables is called 'pure'
