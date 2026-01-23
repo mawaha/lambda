@@ -605,6 +605,20 @@ pre code {
 	margin: 20px 0;
 	border-radius: 12px;
 	box-shadow: var(--card-shadow);
+	position: relative;
+	overflow: hidden;
+}
+
+.info-box::after {
+	content: "λ";
+	position: absolute;
+	font-size: 80px;
+	opacity: 0.04;
+	right: 10px;
+	bottom: -10px;
+	font-weight: bold;
+	pointer-events: none;
+	color: var(--secondary-color);
 }
 
 .info-box strong {
