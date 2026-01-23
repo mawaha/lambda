@@ -209,6 +209,39 @@ pre code {
 	margin-top: 0;
 	color: var(--secondary-color);
 	font-size: 1.3em;
+	position: relative;
+	padding-left: 2em;
+}
+
+.chapter-card h3::before {
+	position: absolute;
+	left: 0;
+	font-size: 1.2em;
+}
+
+/* Chapter-specific icons */
+.chapter-card:nth-child(1) h3::before {
+	content: "⚙️";
+}
+
+.chapter-card:nth-child(2) h3::before {
+	content: "🔀";
+}
+
+.chapter-card:nth-child(3) h3::before {
+	content: "🔢";
+}
+
+.chapter-card:nth-child(4) h3::before {
+	content: "📦";
+}
+
+.chapter-card:nth-child(5) h3::before {
+	content: "🔄";
+}
+
+.chapter-card:nth-child(6) h3::before {
+	content: "🚀";
 }
 
 .chapter-card p {
