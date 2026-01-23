@@ -277,7 +277,7 @@ pre code {
 }
 
 .chapter-nav a:hover {
-	transform: translateY(-2px);
+	transform: translateY(-2px) scale(1.02);
 	box-shadow: var(--hover-shadow);
 	border: none;
 }
@@ -365,7 +365,7 @@ pre code {
 }
 
 .widget-button:hover {
-	transform: translateY(-2px);
+	transform: translateY(-2px) scale(1.02);
 	box-shadow: var(--hover-shadow);
 }
 
