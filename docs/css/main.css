@@ -695,10 +695,24 @@ ol li {
 	}
 }
 
+@keyframes pulse {
+	0%, 100% {
+		box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+	}
+	50% {
+		box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+	}
+}
+
 .demo-result,
 .widget-form,
 .info-box,
 .warning-box,
 .exercise-box {
 	animation: fadeIn 0.3s ease;
+}
+
+/* Pulse animation for primary CTA buttons */
+.chapter-nav a:last-child {
+	animation: pulse 2s ease-in-out infinite;
 }
