@@ -122,8 +122,11 @@ pre code {
 	margin: -20px -20px 40px -20px;
 	border-radius: 0 0 16px 16px;
 	box-shadow: var(--hover-shadow);
-	position: relative;
+	position: sticky;
+	top: -1px;
+	z-index: 100;
 	overflow: hidden;
+	transition: all 0.3s ease;
 }
 
 .nav::before {
