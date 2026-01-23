@@ -89,6 +89,12 @@ a:hover {
 	border-bottom-color: var(--accent-color);
 }
 
+a:focus-visible {
+	outline: 3px solid var(--accent-color);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
 code {
 	background: var(--code-bg);
 	padding: 3px 8px;
@@ -276,6 +282,11 @@ pre code {
 	border: none;
 }
 
+.chapter-nav a:focus-visible {
+	outline: 3px solid var(--accent-color);
+	outline-offset: 3px;
+}
+
 /* Demo Results - More colorful */
 .demo-result {
 	margin: 15px 0;
@@ -360,6 +371,11 @@ pre code {
 
 .widget-button:active {
 	transform: translateY(0);
+}
+
+.widget-button:focus-visible {
+	outline: 3px solid var(--accent-color);
+	outline-offset: 3px;
 }
 
 .widget-result {
