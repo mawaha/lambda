@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 6: Advanced Topics - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 6: Advanced Topics</h1>
+
+	<p>You've mastered the fundamentals of lambda calculus! This chapter explores advanced patterns and connections to modern functional programming.</p>
+
+	<h2>Function Composition</h2>
+
+	<p>Composition is combining functions to create new functions. If you have <code>f</code> and <code>g</code>, composition creates <code>f ∘ g</code>, which means "apply g, then apply f":</p>
+
+	<pre><code>const Compose = f => g => x => f(g(x))</code></pre>
+
+	<p>We've already seen this - it's the same as Multiply for Church numerals!</p>
+
+	<h3>Examples</h3>
+
+	<div id="demo-compose"></div>
+
+	<h3>Composition in Practice</h3>
+
+	<p>Function composition enables point-free style programming:</p>
+
+	<pre><code>// With explicit arguments
+const addThenDouble = x => double(add(x, 5))
+
+// Point-free with composition
+const addThenDouble = Compose(double)(addFive)</code></pre>
+
+	<div class="info-box">
+		<strong>Point-free style:</strong> Writing functions without explicitly mentioning their arguments. The "points" are the function arguments.
+	</div>
+
+	<h2>Currying and Partial Application</h2>
+
+	<p>All lambda calculus functions are automatically curried - they take one argument at a time:</p>
+
+	<pre><code>// Multi-argument function in JavaScript
+const add = (x, y) => x + y
+
+// Curried version
+const addCurried = x => y => x + y
+
+addCurried(3)(4)     // 7
+const addThree = addCurried(3)
+addThree(4)          // 7</code></pre>
+
+	<p>Currying enables partial application - fixing some arguments to create specialized functions.</p>
+
+	<h3>Curry Examples</h3>
+
+	<div id="demo-curry"></div>
+
+	<h2>The Flip Combinator</h2>
+
+	<p>Flip (also called Not) swaps the order of a function's arguments:</p>
+
+	<pre><code>const Flip = f => x => y => f(y)(x)</code></pre>
+
+	<p>Remember how we used Flip to create the Square function?</p>
+
+	<pre><code>const Power = n1 => n2 => n2(n1)
+const Square = Flip(Power)(Two)
+
+toInt(Square(Three))  // 9</code></pre>
+
+	<div id="demo-flip"></div>
+
+	<h2>Once and Twice</h2>
+
+	<p>These functions apply another function a specific number of times:</p>
+
+	<pre><code>const Once = fn => x => fn(x)
+const Twice = fn => x => fn(fn(x))</code></pre>
+
+	<p>Notice that Once is the same as One, and Twice is the same as Two! Church numerals are exactly these "apply n times" functions.</p>
+
+	<div id="demo-once-twice"></div>
+
+	<h2>BiMap for Pairs</h2>
+
+	<p>BiMap applies two functions to both elements of a pair:</p>
+
+	<pre><code>const BiMap = f => g => p => Pair(f(First(p)))(g(Second(p)))</code></pre>
+
+	<p>This is useful for transforming data structures:</p>
+
+	<div id="demo-bimap"></div>
+
+	<h2>The Y Combinator (Conceptual)</h2>
+
+	<p>The Y combinator is one of lambda calculus's most famous constructs. It enables recursion without self-reference:</p>
+
+	<pre><code>Y = λf.(λx.f(x x))(λx.f(x x))</code></pre>
+
+	<p>This is mind-bending: a function that creates recursive functions from non-recursive ones!</p>
+
+	<div class="warning-box">
+		<strong>Warning:</strong> The Y combinator causes immediate infinite loops in strict evaluation languages like JavaScript. It requires lazy evaluation to work. We've used thunks as a practical workaround.
+	</div>
+
+	<div class="info-box">
+		<strong>Historical Note:</strong> The Y combinator was discovered by Haskell Curry, the same person the Haskell programming language is named after. It proves that recursion is a fundamental property of lambda calculus, not something that needs to be added.
+	</div>
+
+	<h2>Church Encodings Beyond Numbers</h2>
+
+	<p>Church encodings exist for many data types:</p>
+
+	<ul>
+		<li><strong>Maybe/Option:</strong> Representing presence or absence of a value</li>
+		<li><strong>Either/Result:</strong> Representing success or failure</li>
+		<li><strong>Trees:</strong> Nested structures</li>
+		<li><strong>Streams:</strong> Infinite sequences</li>
+	</ul>
+
+	<p>These are foundational to modern functional programming languages like Haskell, OCaml, and Elm.</p>
+
+	<h2>Connections to Programming Languages</h2>
+
+	<p>Lambda calculus directly influenced many programming concepts:</p>
+
+	<table>
+		<tr>
+			<th>Lambda Calculus</th>
+			<th>Modern Languages</th>
+		</tr>
+		<tr>
+			<td>Church Booleans</td>
+			<td>Boolean types, if expressions</td>
+		</tr>
+		<tr>
+			<td>Church Numerals</td>
+			<td>Number types, iteration</td>
+		</tr>
+		<tr>
+			<td>Pairs</td>
+			<td>Tuples, records, objects</td>
+		</tr>
+		<tr>
+			<td>Lists</td>
+			<td>Linked lists, arrays</td>
+		</tr>
+		<tr>
+			<td>Recursion</td>
+			<td>Recursive functions, loops</td>
+		</tr>
+		<tr>
+			<td>Currying</td>
+			<td>Partial application, closures</td>
+		</tr>
+		<tr>
+			<td>Thunks</td>
+			<td>Lazy evaluation, promises</td>
+		</tr>
+	</table>
+
+	<h2>Functional Programming Patterns</h2>
+
+	<p>The patterns you've learned are fundamental to functional programming:</p>
+
+	<ul>
+		<li><strong>Higher-order functions:</strong> Functions that take or return functions</li>
+		<li><strong>Immutability:</strong> Values never change, we create new ones</li>
+		<li><strong>Pure functions:</strong> No side effects, same input always gives same output</li>
+		<li><strong>Recursion over iteration:</strong> Looping through recursive calls</li>
+		<li><strong>Data as functions:</strong> Encoding data structurally</li>
+	</ul>
+
+	<h2>Further Exploration</h2>
+
+	<p>If you enjoyed this tutorial, explore these topics next:</p>
+
+	<ul>
+		<li><strong>The Y Combinator:</strong> Deep dive into fixed-point combinators</li>
+		<li><strong>Typed Lambda Calculus:</strong> Adding type systems (Simply Typed LC, System F)</li>
+		<li><strong>Reduction Strategies:</strong> Normal order, applicative order, lazy evaluation</li>
+		<li><strong>Combinatory Logic:</strong> SKI combinator calculus</li>
+		<li><strong>Category Theory:</strong> Mathematical foundations of functional programming</li>
+		<li><strong>Haskell:</strong> A pure functional language based on lambda calculus</li>
+	</ul>
+
+	<div class="exercise-box">
+		<h3>Final Challenges</h3>
+		<ol>
+			<li>Implement a Length function for lists using recursion</li>
+			<li>Create a Map function that applies a function to every element of a list</li>
+			<li>Implement a Filter function that keeps only elements matching a predicate</li>
+			<li>Write a Fold/Reduce function for lists</li>
+			<li>Can you implement the Maybe/Option type?</li>
+		</ol>
+	</div>
+
+	<h2>Conclusion</h2>
+
+	<p>Congratulations! You've completed the interactive lambda calculus tutorial. You now understand:</p>
+
+	<ul>
+		<li>How to encode data as functions</li>
+		<li>How to perform computation with only functions</li>
+		<li>The theoretical foundations of functional programming</li>
+		<li>Why lambda calculus is universal and powerful</li>
+	</ul>
+
+	<p>Lambda calculus proves that computation requires only three things:</p>
+
+	<ol>
+		<li><strong>Variables</strong></li>
+		<li><strong>Function abstraction</strong> (creating functions)</li>
+		<li><strong>Function application</strong> (calling functions)</li>
+	</ol>
+
+	<p>Everything else - numbers, booleans, data structures, recursion - emerges from these simple foundations. This elegance is why lambda calculus remains relevant 90 years after its creation.</p>
+
+	<div class="info-box">
+		<strong>Thank you for learning with us!</strong> Lambda calculus is not just theoretical - it's the foundation of modern functional programming. The patterns you've learned here directly apply to real-world code in languages like JavaScript, Python, Haskell, and more.
+	</div>
+
+	<div class="chapter-nav">
+		<a href="05-recursion.html">← Chapter 5: Recursion</a>
+		<a href="../index.html">Home</a>
+	</div>
+
+	<script type="module">
+		import { Compose, Once, Twice, Flip, BiMap, Pair, First, Second, Increment, Power, Two, Three, Four } from '../lib/lamb.js'
+		import { K } from '../lib/combinators.js'
+		import { toInt } from '../lib/utils.js'
+		import { InteractiveDemo } from '../js/interactive.js'
+
+		const demo = new InteractiveDemo()
+
+		// Composition demo
+		demo.registerDemo('demo-compose', () => {
+			const addOne = x => x + 1
+			const double = x => x * 2
+
+			const composedJS = Compose(double)(addOne)
+
+			return `
+				const addOne = x => x + 1<br>
+				const double = x => x * 2<br>
+				const composed = Compose(double)(addOne)<br>
+				<br>
+				composed(5) = ${composedJS(5)} (first adds 1 to get 6, then doubles to get 12)
+			`
+		})
+
+		// Curry demo
+		demo.registerDemo('demo-curry', () => {
+			const alwaysFive = K(5)
+			const alwaysTen = K(10)
+
+			return `
+				K is curried - it takes arguments one at a time:<br>
+				const alwaysFive = K(5)<br>
+				const alwaysTen = K(10)<br>
+				<br>
+				alwaysFive(100) = ${alwaysFive(100)}<br>
+				alwaysTen(100) = ${alwaysTen(100)}
+			`
+		})
+
+		// Flip demo
+		demo.registerDemo('demo-flip', () => {
+			const subtract = x => y => x - y
+			const flippedSubtract = Flip(subtract)
+
+			return `
+				const subtract = x => y => x - y<br>
+				subtract(10)(3) = ${subtract(10)(3)}<br>
+				<br>
+				const flipped = Flip(subtract)<br>
+				flipped(10)(3) = ${flippedSubtract(10)(3)} (arguments swapped!)
+			`
+		})
+
+		// Once/Twice demo
+		demo.registerDemo('demo-once-twice', () => {
+			const inc = x => x + 1
+
+			return `
+				const inc = x => x + 1<br>
+				<br>
+				Once(inc)(5) = ${Once(inc)(5)}<br>
+				Twice(inc)(5) = ${Twice(inc)(5)}<br>
+				<br>
+				Notice: Once = One, Twice = Two in Church numerals!
+			`
+		})
+
+		// BiMap demo
+		demo.registerDemo('demo-bimap', () => {
+			const pair = Pair(3)(4)
+			const doubled = BiMap(x => x * 2)(x => x * 3)(pair)
+
+			return `
+				const pair = Pair(3)(4)<br>
+				const doubled = BiMap(x => x * 2)(x => x * 3)(pair)<br>
+				<br>
+				First(doubled) = ${First(doubled)} (3 * 2)<br>
+				Second(doubled) = ${Second(doubled)} (4 * 3)
+			`
+		})
+
+		demo.runDemos()
+	</script>
+</body>
+</html>

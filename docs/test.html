@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Module Test</title>
+</head>
+<body>
+	<h1>Module Load Test</h1>
+	<div id="results"></div>
+
+	<script type="module">
+		const results = document.getElementById('results')
+		const log = (msg, success = true) => {
+			const div = document.createElement('div')
+			div.style.color = success ? 'green' : 'red'
+			div.textContent = msg
+			results.appendChild(div)
+		}
+
+		try {
+			// Test combinators
+			const { Id, K, M } = await import('./lib/combinators.js')
+			log('✓ Combinators loaded')
+
+			// Test lamb
+			const { True, False, Zero, One, Two, Add, Multiply } = await import('./lib/lamb.js')
+			log('✓ Lamb loaded')
+
+			// Test utils
+			const { toInt, toChurch, toBoolean } = await import('./lib/utils.js')
+			log('✓ Utils loaded')
+
+			// Test data
+			const { Append, Head, Tail, isEmpty, Nil } = await import('./lib/data.js')
+			log('✓ Data loaded')
+
+			// Test factorial
+			const { Factorial } = await import('./lib/factorial.js')
+			log('✓ Factorial loaded')
+
+			// Test fibonacci
+			const { Fibonacci } = await import('./lib/fibonacci.js')
+			log('✓ Fibonacci loaded')
+
+			// Test functionality
+			log(`Id(5) = ${Id(5)}`)
+			log(`toInt(Two) = ${toInt(Two)}`)
+			log(`toBoolean(True) = ${toBoolean(True)}`)
+			log(`toInt(Add(One)(Two)) = ${toInt(Add(One)(Two))}`)
+			log(`toInt(Factorial(Two)()) = ${toInt(Factorial(Two)())}`)
+
+			log('✓ All tests passed!', true)
+		} catch (error) {
+			log(`✗ Error: ${error.message}`, false)
+			console.error(error)
+		}
+	</script>
+</body>
+</html>

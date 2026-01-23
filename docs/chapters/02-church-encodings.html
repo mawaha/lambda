@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 2: Church Encodings - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 2: Church Encodings</h1>
+
+	<p>How do you represent data using only functions? Alonzo Church discovered elegant encodings for booleans, numbers, and data structures. In this chapter, we'll learn how to represent booleans and build logic gates using pure lambda calculus.</p>
+
+	<h2>Booleans as Choice Functions</h2>
+
+	<p>In lambda calculus, a boolean is a function that <em>chooses</em> between two options:</p>
+
+	<ul>
+		<li><strong>True</strong> selects the first argument</li>
+		<li><strong>False</strong> selects the second argument</li>
+	</ul>
+
+	<div class="info-box">
+		<strong>True:</strong> λx.λy.x (returns first argument)<br>
+		<strong>False:</strong> λx.λy.y (returns second argument)
+	</div>
+
+	<pre><code>const True = x => y => x
+const False = x => y => y</code></pre>
+
+	<p>Notice that True is exactly the K combinator from Chapter 1! False is similar but returns the second argument instead.</p>
+
+	<h3>Examples</h3>
+
+	<div id="demo-bool-basic"></div>
+
+	<h2>The If Conditional</h2>
+
+	<p>Since booleans are already choice functions, conditionals are trivial:</p>
+
+	<pre><code>const If = b => x => y => b(x)(y)</code></pre>
+
+	<p>If takes a boolean <code>b</code> and two values. It applies the boolean to both values, letting the boolean choose which one to return.</p>
+
+	<div id="demo-if-true"></div>
+	<div id="demo-if-false"></div>
+
+	<h2>Logic Operators</h2>
+
+	<p>We can build all logic gates using only our boolean encoding!</p>
+
+	<h3>AND</h3>
+
+	<p>AND returns True only if both arguments are True:</p>
+
+	<pre><code>const And = x => y => x(y)(x)</code></pre>
+
+	<p>Think about it: if <code>x</code> is True, return <code>y</code> (the second determines the result). If <code>x</code> is False, return <code>x</code> (False).</p>
+
+	<div id="demo-and-table"></div>
+
+	<h3>OR</h3>
+
+	<p>OR returns True if either argument is True:</p>
+
+	<pre><code>const Or = x => y => x(x)(y)</code></pre>
+
+	<p>If <code>x</code> is True, return <code>x</code> (True). If <code>x</code> is False, return <code>y</code> (the second determines the result).</p>
+
+	<div id="demo-or-table"></div>
+
+	<h3>NOT</h3>
+
+	<p>NOT flips the boolean by swapping which argument gets returned:</p>
+
+	<pre><code>const Not = b => x => y => b(y)(x)</code></pre>
+
+	<p>Instead of <code>b(x)(y)</code>, we do <code>b(y)(x)</code> - the arguments are flipped!</p>
+
+	<div id="demo-not"></div>
+
+	<h2>Interactive Truth Tables</h2>
+
+	<p>Explore how these logic operators work:</p>
+
+	<div id="widget-logic-explorer"></div>
+
+	<h2>Pairs as Data Structures</h2>
+
+	<p>We can also encode data structures as functions. A Pair stores two values:</p>
+
+	<pre><code>const Pair = a => b => f => f(a)(b)</code></pre>
+
+	<p>A pair takes two values and returns a function that applies a selector function to both values.</p>
+
+	<pre><code>const First = p => p(True)
+const Second = p => p(False)</code></pre>
+
+	<p>To extract values, we pass True (selects first) or False (selects second)!</p>
+
+	<h3>Example</h3>
+
+	<div id="demo-pair"></div>
+
+	<h2>Interactive Pair Explorer</h2>
+
+	<div id="widget-pair-explorer"></div>
+
+	<div class="exercise-box">
+		<h3>Exercises</h3>
+		<ol>
+			<li>What does <code>And(True)(True)</code> return?</li>
+			<li>What does <code>Or(False)(False)</code> return?</li>
+			<li>What does <code>Not(Not(True))</code> return?</li>
+			<li>Can you write XOR using And, Or, and Not?</li>
+			<li>What does <code>Pair(10)(20)(And)</code> do?</li>
+		</ol>
+	</div>
+
+	<h2>Why This Matters</h2>
+
+	<p>We've just proven that you can represent data and logic using only functions. No primitive types needed! This demonstrates that:</p>
+
+	<ul>
+		<li>Functions are universal computational tools</li>
+		<li>Data and behavior can be unified</li>
+		<li>Complex structures emerge from simple abstractions</li>
+	</ul>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Booleans are choice functions between two options</li>
+		<li>True selects the first argument, False selects the second</li>
+		<li>All logic operators can be built from this encoding</li>
+		<li>Pairs store two values and use booleans as selectors</li>
+		<li>Everything is just functions!</li>
+	</ul>
+
+	<div class="chapter-nav">
+		<a href="01-combinators.html">← Chapter 1: Combinators</a>
+		<a href="03-numerals.html">Chapter 3: Church Numerals →</a>
+	</div>
+
+	<script type="module">
+		import { True, False, If, And, Or, Not, Pair, First, Second } from '../lib/lamb.js'
+		import { toBoolean } from '../lib/utils.js'
+		import { InteractiveDemo } from '../js/interactive.js'
+
+		const demo = new InteractiveDemo()
+
+		// Boolean demos
+		demo.registerDemo('demo-bool-basic', () => {
+			return `
+				True("first")("second") = "${True("first")("second")}"<br>
+				False("first")("second") = "${False("first")("second")}"
+			`
+		})
+
+		demo.registerDemo('demo-if-true', () => {
+			const result = If(True)("yes")("no")
+			return `If(True)("yes")("no") = "${result}"`
+		})
+
+		demo.registerDemo('demo-if-false', () => {
+			const result = If(False)("yes")("no")
+			return `If(False)("yes")("no") = "${result}"`
+		})
+
+		// Logic demos
+		demo.registerDemo('demo-and-table', () => {
+			return `
+				<table>
+					<tr><th>A</th><th>B</th><th>And(A)(B)</th></tr>
+					<tr><td>True</td><td>True</td><td>${toBoolean(And(True)(True))}</td></tr>
+					<tr><td>True</td><td>False</td><td>${toBoolean(And(True)(False))}</td></tr>
+					<tr><td>False</td><td>True</td><td>${toBoolean(And(False)(True))}</td></tr>
+					<tr><td>False</td><td>False</td><td>${toBoolean(And(False)(False))}</td></tr>
+				</table>
+			`
+		})
+
+		demo.registerDemo('demo-or-table', () => {
+			return `
+				<table>
+					<tr><th>A</th><th>B</th><th>Or(A)(B)</th></tr>
+					<tr><td>True</td><td>True</td><td>${toBoolean(Or(True)(True))}</td></tr>
+					<tr><td>True</td><td>False</td><td>${toBoolean(Or(True)(False))}</td></tr>
+					<tr><td>False</td><td>True</td><td>${toBoolean(Or(False)(True))}</td></tr>
+					<tr><td>False</td><td>False</td><td>${toBoolean(Or(False)(False))}</td></tr>
+				</table>
+			`
+		})
+
+		demo.registerDemo('demo-not', () => {
+			return `
+				Not(True) = ${toBoolean(Not(True))}<br>
+				Not(False) = ${toBoolean(Not(False))}
+			`
+		})
+
+		// Pair demo
+		demo.registerDemo('demo-pair', () => {
+			const myPair = Pair(10)(20)
+			return `
+				const myPair = Pair(10)(20)<br>
+				First(myPair) = ${First(myPair)}<br>
+				Second(myPair) = ${Second(myPair)}
+			`
+		})
+
+		// Interactive widgets
+		demo.registerWidget('widget-logic-explorer', {
+			inputs: [
+				{ name: 'a', label: 'A (0=False, 1=True)', type: 'number', default: 1, min: 0, max: 1 },
+				{ name: 'b', label: 'B (0=False, 1=True)', type: 'number', default: 0, min: 0, max: 1 }
+			],
+			compute: ({ a, b }) => {
+				const boolA = a === 1 ? True : False
+				const boolB = b === 1 ? True : False
+				return {
+					'AND': toBoolean(And(boolA)(boolB)),
+					'OR': toBoolean(Or(boolA)(boolB)),
+					'NOT A': toBoolean(Not(boolA)),
+					'NOT B': toBoolean(Not(boolB))
+				}
+			}
+		})
+
+		demo.registerWidget('widget-pair-explorer', {
+			inputs: [
+				{ name: 'first', label: 'First Value', type: 'number', default: 42, min: 0, max: 100 },
+				{ name: 'second', label: 'Second Value', type: 'number', default: 99, min: 0, max: 100 }
+			],
+			compute: ({ first, second }) => {
+				const pair = Pair(first)(second)
+				return {
+					'First(pair)': First(pair),
+					'Second(pair)': Second(pair)
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 4: Data Structures - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 4: Data Structures</h1>
+
+	<p>We've seen how to represent booleans and numbers as functions. Now we'll build complex data structures - specifically lists - using only functions. This demonstrates that lambda calculus is Turing-complete!</p>
+
+	<h2>Review: Pairs</h2>
+
+	<p>From Chapter 2, recall that Pairs store two values:</p>
+
+	<pre><code>const Pair = a => b => f => f(a)(b)
+
+const First = p => p(True)
+const Second = p => p(False)</code></pre>
+
+	<p>Pairs are the foundation for building lists and more complex structures.</p>
+
+	<div id="demo-pair-review"></div>
+
+	<h2>Lists as Nested Pairs</h2>
+
+	<p>A list is built from nested pairs. Each pair contains:</p>
+
+	<ul>
+		<li><strong>First:</strong> The current element (head)</li>
+		<li><strong>Second:</strong> The rest of the list (tail)</li>
+	</ul>
+
+	<p>An empty list is represented by a special Nil value:</p>
+
+	<pre><code>const Nil = Pair(False)(False)</code></pre>
+
+	<h3>Visual Representation</h3>
+
+	<div class="info-box">
+		<strong>Empty list:</strong> Nil<br>
+		<strong>List [1]:</strong> Pair(1)(Nil)<br>
+		<strong>List [1, 2]:</strong> Pair(1)(Pair(2)(Nil))<br>
+		<strong>List [1, 2, 3]:</strong> Pair(1)(Pair(2)(Pair(3)(Nil)))
+	</div>
+
+	<h2>The Append Function</h2>
+
+	<p>Append prepends an element to the front of a list:</p>
+
+	<pre><code>const Append = head => list => f => x => f(head)(list(f)(x))</code></pre>
+
+	<p>This creates a new list with the head element followed by the existing list.</p>
+
+	<div id="demo-append"></div>
+
+	<h3>Building a List</h3>
+
+	<pre><code>const list1 = Append(One)(Nil)           // [1]
+const list2 = Append(Two)(list1)          // [2, 1]
+const list3 = Append(Three)(list2)        // [3, 2, 1]</code></pre>
+
+	<div id="demo-build-list"></div>
+
+	<h2>List Operations</h2>
+
+	<h3>Head - Get First Element</h3>
+
+	<pre><code>const Head = list => list(a => b => a)(Id)</code></pre>
+
+	<p>Head extracts the first element from a list.</p>
+
+	<div id="demo-head"></div>
+
+	<h3>Tail - Get Rest of List</h3>
+
+	<pre><code>const Tail = list => First(
+	list(
+		a => b => Pair(Second(b))(Append(a)(Second(b)))
+	)(Nil)
+)</code></pre>
+
+	<p>Tail returns everything except the first element. This is complex because we need to "shift" through the list.</p>
+
+	<div id="demo-tail"></div>
+
+	<h3>isEmpty - Check if List is Empty</h3>
+
+	<pre><code>const isEmpty = list => list(a => b => False)(True)</code></pre>
+
+	<p>Returns True if the list is Nil, False otherwise.</p>
+
+	<div id="demo-isempty"></div>
+
+	<h2>Interactive List Builder</h2>
+
+	<p>Build and explore lists interactively:</p>
+
+	<div id="widget-list-builder"></div>
+
+	<h2>Visual List Structure</h2>
+
+	<p>Here's how a list [1, 2, 3] looks as nested pairs:</p>
+
+	<div id="visualize-list"></div>
+
+	<h2>Traversing Lists</h2>
+
+	<p>To process a list, we can recursively apply operations:</p>
+
+	<pre><code>// Pseudocode for list traversal
+function processList(list) {
+	if (isEmpty(list)) {
+		return baseCase
+	} else {
+		const h = Head(list)
+		const t = Tail(list)
+		return combine(h, processList(t))
+	}
+}</code></pre>
+
+	<p>This pattern is fundamental to functional programming!</p>
+
+	<div class="exercise-box">
+		<h3>Exercises</h3>
+		<ol>
+			<li>Create a list [4, 5, 6] using Append and Nil</li>
+			<li>What is Head(Tail([1, 2, 3]))?</li>
+			<li>What is isEmpty(Nil)?</li>
+			<li>What happens when you call Head(Nil)?</li>
+			<li>Can you think of how to implement a Length function?</li>
+		</ol>
+	</div>
+
+	<h2>Why This Matters</h2>
+
+	<p>Lists are fundamental data structures in programming. By encoding them as functions, we've shown that:</p>
+
+	<ul>
+		<li>Complex structures can be built from simple abstractions</li>
+		<li>Functions can represent any data type</li>
+		<li>Lambda calculus can express real-world programs</li>
+		<li>The divide between "code" and "data" is artificial</li>
+	</ul>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Lists are nested pairs terminating in Nil</li>
+		<li>Append adds an element to the front of a list</li>
+		<li>Head extracts the first element</li>
+		<li>Tail returns the rest of the list</li>
+		<li>isEmpty checks if a list is empty</li>
+		<li>All data structures can be encoded as functions</li>
+	</ul>
+
+	<div class="chapter-nav">
+		<a href="03-numerals.html">← Chapter 3: Church Numerals</a>
+		<a href="05-recursion.html">Chapter 5: Recursion →</a>
+	</div>
+
+	<script type="module">
+		import { Pair, First, Second, One, Two, Three, Four, Five, True, False } from '../lib/lamb.js'
+		import { Append, Head, Tail, isEmpty, Nil } from '../lib/data.js'
+		import { toInt, toBoolean, toArray } from '../lib/utils.js'
+		import { InteractiveDemo } from '../js/interactive.js'
+		import { ListVisualizer } from '../js/visualizer.js'
+
+		const demo = new InteractiveDemo()
+
+		// Pair review
+		demo.registerDemo('demo-pair-review', () => {
+			const pair = Pair(10)(20)
+			return `
+				const pair = Pair(10)(20)<br>
+				First(pair) = ${First(pair)}<br>
+				Second(pair) = ${Second(pair)}
+			`
+		})
+
+		// Append demo
+		demo.registerDemo('demo-append', () => {
+			const list1 = Append(One)(Nil)
+			const list2 = Append(Two)(list1)
+			return `
+				const list1 = Append(One)(Nil)<br>
+				toArray(list1) = [${toArray(list1)}]<br>
+				<br>
+				const list2 = Append(Two)(list1)<br>
+				toArray(list2) = [${toArray(list2)}]
+			`
+		})
+
+		// Build list demo
+		demo.registerDemo('demo-build-list', () => {
+			const list = Append(Three)(Append(Two)(Append(One)(Nil)))
+			return `
+				Append(Three)(Append(Two)(Append(One)(Nil)))<br>
+				Result: [${toArray(list)}]
+			`
+		})
+
+		// Head demo
+		demo.registerDemo('demo-head', () => {
+			const list = Append(Five)(Append(Four)(Append(Three)(Nil)))
+			const h = Head(list)
+			return `
+				const list = [${toArray(list)}]<br>
+				Head(list) = ${toInt(h)}
+			`
+		})
+
+		// Tail demo
+		demo.registerDemo('demo-tail', () => {
+			const list = Append(Five)(Append(Four)(Append(Three)(Nil)))
+			const t = Tail(list)
+			return `
+				const list = [${toArray(list)}]<br>
+				Tail(list) = [${toArray(t)}]
+			`
+		})
+
+		// isEmpty demo
+		demo.registerDemo('demo-isempty', () => {
+			const list = Append(One)(Nil)
+			return `
+				isEmpty(Nil) = ${toBoolean(isEmpty(Nil))}<br>
+				isEmpty([${toArray(list)}]) = ${toBoolean(isEmpty(list))}
+			`
+		})
+
+		// List visualization
+		demo.registerDemo('visualize-list', () => {
+			const arr = [1, 2, 3]
+			return ListVisualizer.visualizePairs(arr)
+		})
+
+		// Interactive widget
+		demo.registerWidget('widget-list-builder', {
+			inputs: [
+				{ name: 'a', label: 'Element 1', type: 'number', default: 1, min: 0, max: 10 },
+				{ name: 'b', label: 'Element 2', type: 'number', default: 2, min: 0, max: 10 },
+				{ name: 'c', label: 'Element 3', type: 'number', default: 3, min: 0, max: 10 }
+			],
+			compute: ({ a, b, c }) => {
+				const churchA = a
+				const churchB = b
+				const churchC = c
+
+				// Build list in reverse order (Append prepends)
+				const list = Append(One)(Append(Two)(Append(Three)(Nil)))
+
+				const arr = toArray(list)
+				const head = toInt(Head(list))
+				const tail = toArray(Tail(list))
+
+				return {
+					'Full List': `[${arr}]`,
+					'Head': head,
+					'Tail': `[${tail}]`,
+					'isEmpty': toBoolean(isEmpty(list))
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>

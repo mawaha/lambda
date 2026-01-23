@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 3: Church Numerals - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 3: Church Numerals</h1>
+
+	<p>Numbers as functions? Yes! Church numerals represent numbers as repeated function application. The number n is a function that applies another function n times.</p>
+
+	<h2>Understanding Church Numerals</h2>
+
+	<p>A Church numeral is a higher-order function that represents a number by how many times it applies a function:</p>
+
+	<div class="info-box">
+		<strong>Zero:</strong> Apply function 0 times<br>
+		<strong>One:</strong> Apply function 1 time<br>
+		<strong>Two:</strong> Apply function 2 times<br>
+		<strong>Three:</strong> Apply function 3 times<br>
+		...and so on
+	</div>
+
+	<pre><code>// Zero applies f zero times (just returns x)
+const Zero = f => x => x
+
+// One applies f once
+const One = f => x => f(x)
+
+// Two applies f twice
+const Two = f => x => f(f(x))
+
+// Three applies f three times
+const Three = f => x => f(f(f(x)))</code></pre>
+
+	<p>Notice that Zero is the same as False! This is no coincidence - they both represent "nothing" or "empty."</p>
+
+	<h2>Converting to JavaScript Numbers</h2>
+
+	<p>To see what a Church numeral represents, we convert it to a JavaScript number by starting with 0 and using increment as our function:</p>
+
+	<pre><code>const toInt = n => n(x => x + 1)(0)
+
+toInt(Zero)   // 0
+toInt(One)    // 1
+toInt(Two)    // 2
+toInt(Three)  // 3</code></pre>
+
+	<div id="demo-numerals"></div>
+
+	<h2>The Increment Function</h2>
+
+	<p>To create any numeral, we need to increment. Increment takes a number n and returns n+1:</p>
+
+	<pre><code>const Increment = n => f => x => f(n(f)(x))</code></pre>
+
+	<p>This says: "To increment n, apply f one more time than n does."</p>
+
+	<div id="demo-increment"></div>
+
+	<h3>Building Numbers</h3>
+
+	<pre><code>const Zero = f => x => x
+const One = Increment(Zero)
+const Two = Increment(One)
+const Three = Increment(Two)
+const Four = Increment(Three)
+const Five = Increment(Four)</code></pre>
+
+	<h2>Addition</h2>
+
+	<p>Addition is surprisingly elegant. To add n1 and n2, apply Increment n1 times to n2:</p>
+
+	<pre><code>const Add = n1 => n2 => n1(Increment)(n2)</code></pre>
+
+	<p>This says: "Starting with n2, increment it n1 times."</p>
+
+	<div id="demo-add"></div>
+	<div id="visualize-add"></div>
+
+	<h2>Multiplication</h2>
+
+	<p>Multiplication is function composition! To multiply n1 by n2, compose the functions:</p>
+
+	<pre><code>const Compose = f => g => x => f(g(x))
+const Multiply = Compose</code></pre>
+
+	<p>Think about it: Two(f) applies f twice. Three(Two(f)) applies "apply f twice" three times, giving you f six times!</p>
+
+	<div id="demo-multiply"></div>
+	<div id="visualize-multiply"></div>
+
+	<h2>Interactive Arithmetic Calculator</h2>
+
+	<div id="widget-calculator"></div>
+
+	<h2>Subtraction (Advanced)</h2>
+
+	<p>Subtraction is trickier. We use a helper function called Phi that manipulates pairs:</p>
+
+	<pre><code>const Phi = p => Pair(Second(p))(Increment(Second(p)))
+
+const Decrement = n => First(n(Phi)(Pair(Zero)(Zero)))</code></pre>
+
+	<p>Decrement creates a pair starting at (0, 0) and shifts values n times, then takes the first element.</p>
+
+	<div id="demo-decrement"></div>
+
+	<pre><code>const Subtract = n1 => n2 => n2(Decrement)(n1)</code></pre>
+
+	<p>Subtraction applies Decrement n2 times to n1.</p>
+
+	<div id="demo-subtract"></div>
+
+	<h2>Exponentiation</h2>
+
+	<p>Power is mind-bending: to raise n1 to the power of n2, apply n2 to n1:</p>
+
+	<pre><code>const Power = n1 => n2 => n2(n1)</code></pre>
+
+	<p>This works because n2 is a function that says "apply something n2 times", and we're telling it to apply n1!</p>
+
+	<div id="demo-power"></div>
+
+	<h2>Comparison Predicates</h2>
+
+	<p>We can test properties of numbers using predicates that return booleans:</p>
+
+	<pre><code>// Is the number zero?
+const isZero = n => n(K(False))(True)
+
+// Less than or equal?
+const LEQ = a => b => isZero(Subtract(a)(b))
+
+// Equal?
+const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
+
+	<div id="demo-predicates"></div>
+
+	<h2>Interactive Converter</h2>
+
+	<p>Convert between Church numerals and JavaScript numbers:</p>
+
+	<div id="widget-converter"></div>
+
+	<div class="exercise-box">
+		<h3>Exercises</h3>
+		<ol>
+			<li>What is toInt(Add(Two)(Three))?</li>
+			<li>What is toInt(Multiply(Four)(Zero))?</li>
+			<li>Can you explain why Multiply is the same as Compose?</li>
+			<li>What happens with Subtract(Two)(Five)?</li>
+			<li>What is toInt(Power(Two)(Three))?</li>
+		</ol>
+	</div>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Church numerals represent numbers as repeated function application</li>
+		<li>The number n applies a function n times</li>
+		<li>Addition is repeated increment</li>
+		<li>Multiplication is function composition</li>
+		<li>Subtraction uses pairs and shifting</li>
+		<li>Exponentiation applies a number as a function</li>
+		<li>All arithmetic can be done with only functions</li>
+	</ul>
+
+	<div class="chapter-nav">
+		<a href="02-church-encodings.html">← Chapter 2: Church Encodings</a>
+		<a href="04-data-structures.html">Chapter 4: Data Structures →</a>
+	</div>
+
+	<script type="module">
+		import { Zero, One, Two, Three, Four, Five, Increment, Add, Subtract, Multiply, Power, Decrement, isZero, LEQ, EQ } from '../lib/lamb.js'
+		import { toInt, toChurch, toBoolean } from '../lib/utils.js'
+		import { InteractiveDemo } from '../js/interactive.js'
+		import { NumeralVisualizer } from '../js/visualizer.js'
+
+		const demo = new InteractiveDemo()
+
+		// Numeral demos
+		demo.registerDemo('demo-numerals', () => {
+			return `
+				toInt(Zero) = ${toInt(Zero)}<br>
+				toInt(One) = ${toInt(One)}<br>
+				toInt(Two) = ${toInt(Two)}<br>
+				toInt(Three) = ${toInt(Three)}<br>
+				toInt(Four) = ${toInt(Four)}<br>
+				toInt(Five) = ${toInt(Five)}
+			`
+		})
+
+		demo.registerDemo('demo-increment', () => {
+			return `
+				toInt(Increment(Zero)) = ${toInt(Increment(Zero))}<br>
+				toInt(Increment(Three)) = ${toInt(Increment(Three))}<br>
+				toInt(Increment(Five)) = ${toInt(Increment(Five))}
+			`
+		})
+
+		// Arithmetic demos
+		demo.registerDemo('demo-add', () => {
+			const result = Add(Two)(Three)
+			return `toInt(Add(Two)(Three)) = ${toInt(result)}`
+		})
+
+		demo.registerDemo('visualize-add', () => {
+			const result = toInt(Add(Two)(Three))
+			return NumeralVisualizer.visualizeOperation(2, 3, 'add', result)
+		})
+
+		demo.registerDemo('demo-multiply', () => {
+			const result = Multiply(Three)(Four)
+			return `toInt(Multiply(Three)(Four)) = ${toInt(result)}`
+		})
+
+		demo.registerDemo('visualize-multiply', () => {
+			const result = toInt(Multiply(Two)(Three))
+			return NumeralVisualizer.visualizeOperation(2, 3, 'multiply', result)
+		})
+
+		demo.registerDemo('demo-decrement', () => {
+			return `
+				toInt(Decrement(Three)) = ${toInt(Decrement(Three))}<br>
+				toInt(Decrement(One)) = ${toInt(Decrement(One))}<br>
+				toInt(Decrement(Zero)) = ${toInt(Decrement(Zero))} (can't go below zero!)
+			`
+		})
+
+		demo.registerDemo('demo-subtract', () => {
+			return `
+				toInt(Subtract(Five)(Two)) = ${toInt(Subtract(Five)(Two))}<br>
+				toInt(Subtract(Three)(Three)) = ${toInt(Subtract(Three)(Three))}
+			`
+		})
+
+		demo.registerDemo('demo-power', () => {
+			return `
+				toInt(Power(Two)(Three)) = ${toInt(Power(Two)(Three))} (2³)<br>
+				toInt(Power(Three)(Two)) = ${toInt(Power(Three)(Two))} (3²)
+			`
+		})
+
+		demo.registerDemo('demo-predicates', () => {
+			return `
+				isZero(Zero) = ${toBoolean(isZero(Zero))}<br>
+				isZero(One) = ${toBoolean(isZero(One))}<br>
+				LEQ(Two)(Five) = ${toBoolean(LEQ(Two)(Five))}<br>
+				LEQ(Five)(Two) = ${toBoolean(LEQ(Five)(Two))}<br>
+				EQ(Three)(Three) = ${toBoolean(EQ(Three)(Three))}<br>
+				EQ(Two)(Five) = ${toBoolean(EQ(Two)(Five))}
+			`
+		})
+
+		// Interactive widgets
+		demo.registerWidget('widget-calculator', {
+			inputs: [
+				{ name: 'a', label: 'First Number', type: 'number', default: 3, min: 0, max: 10 },
+				{ name: 'b', label: 'Second Number', type: 'number', default: 2, min: 0, max: 10 }
+			],
+			maxValue: 10,
+			compute: ({ a, b }) => {
+				const churchA = toChurch(a)
+				const churchB = toChurch(b)
+				return {
+					'Add': toInt(Add(churchA)(churchB)),
+					'Multiply': toInt(Multiply(churchA)(churchB)),
+					'Subtract (a-b)': toInt(Subtract(churchA)(churchB)),
+					'Power (a^b)': b <= 3 ? toInt(Power(churchA)(churchB)) : 'Too large'
+				}
+			}
+		})
+
+		demo.registerWidget('widget-converter', {
+			inputs: [
+				{ name: 'number', label: 'JavaScript Number', type: 'number', default: 5, min: 0, max: 10 }
+			],
+			compute: ({ number }) => {
+				const church = toChurch(number)
+				return {
+					'Church Numeral': `Function that applies ${number} times`,
+					'Back to Int': toInt(church),
+					'Verification': toInt(church) === number ? 'Correct!' : 'Error'
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>

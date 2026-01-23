@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lambda Calculus Tutorial - Interactive Guide</title>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="index.html">Home</a>
+		<a href="#chapters">Chapters</a>
+		<a href="https://github.com/mawaha/lambda" target="_blank">GitHub</a>
+	</div>
+
+	<h1>Interactive Lambda Calculus Tutorial</h1>
+
+	<p>Welcome to an interactive journey through the fundamentals of lambda calculus! This tutorial teaches you how to compute anything using only functions.</p>
+
+	<h2>What is Lambda Calculus?</h2>
+
+	<p>Lambda calculus is a formal system for expressing computation based on function abstraction and application. Created by Alonzo Church in the 1930s, it serves as the theoretical foundation for functional programming languages.</p>
+
+	<p>In lambda calculus, everything is a function. There are no numbers, booleans, or data structures in the traditional sense. Instead, we <em>encode</em> these concepts using only functions. This might seem impossible at first, but you'll discover it's elegantly simple.</p>
+
+	<h3>Core Concepts</h3>
+
+	<ul>
+		<li><strong>Abstraction:</strong> Creating functions (λx.E)</li>
+		<li><strong>Application:</strong> Applying functions to arguments</li>
+		<li><strong>Reduction:</strong> Simplifying expressions by substitution</li>
+	</ul>
+
+	<div class="info-box">
+		<strong>Note:</strong> This tutorial uses JavaScript to demonstrate lambda calculus concepts. While JavaScript isn't a pure functional language, it supports first-class functions, making it perfect for learning lambda calculus interactively.
+	</div>
+
+	<h2>Prerequisites</h2>
+
+	<ul>
+		<li>Basic understanding of functions in programming</li>
+		<li>Familiarity with arrow function syntax (x => y)</li>
+		<li>No advanced math required!</li>
+	</ul>
+
+	<h2>What You'll Learn</h2>
+
+	<ol>
+		<li>How to represent data using only functions</li>
+		<li>How to perform arithmetic without numbers</li>
+		<li>How to build data structures from functions</li>
+		<li>How recursion works at a fundamental level</li>
+		<li>The theoretical foundations of functional programming</li>
+	</ol>
+
+	<h2 id="chapters">Tutorial Chapters</h2>
+
+	<div class="nav-chapters">
+		<a href="chapters/01-combinators.html" class="chapter-card">
+			<h3>Chapter 1: Combinators</h3>
+			<p>Learn the building blocks of lambda calculus: Identity, Constant, and Self-application combinators.</p>
+		</a>
+
+		<a href="chapters/02-church-encodings.html" class="chapter-card">
+			<h3>Chapter 2: Church Encodings</h3>
+			<p>Discover how to represent booleans and logic using only functions. Build conditionals and boolean operators.</p>
+		</a>
+
+		<a href="chapters/03-numerals.html" class="chapter-card">
+			<h3>Chapter 3: Church Numerals</h3>
+			<p>Represent numbers as repeated function application. Learn arithmetic operations: addition, multiplication, and more.</p>
+		</a>
+
+		<a href="chapters/04-data-structures.html" class="chapter-card">
+			<h3>Chapter 4: Data Structures</h3>
+			<p>Build lists and pairs from functions. Learn how to create and manipulate complex data structures.</p>
+		</a>
+
+		<a href="chapters/05-recursion.html" class="chapter-card">
+			<h3>Chapter 5: Recursion</h3>
+			<p>Explore recursive functions like factorial and Fibonacci. Understand thunking and lazy evaluation.</p>
+		</a>
+
+		<a href="chapters/06-advanced.html" class="chapter-card">
+			<h3>Chapter 6: Advanced Topics</h3>
+			<p>Dive into function composition, currying patterns, and advanced functional programming concepts.</p>
+		</a>
+	</div>
+
+	<h2>Quick Demo</h2>
+
+	<p>Here's a taste of what you'll learn. This is the Identity combinator, the simplest lambda function:</p>
+
+	<pre><code>// Lambda: λx.x
+const Id = x => x
+
+Id(5)     // Returns: 5
+Id("hi")  // Returns: "hi"
+Id(Id)    // Returns: Id (a function!)</code></pre>
+
+	<p>The Identity function simply returns its argument unchanged. While it seems trivial, it's a fundamental building block for more complex functions.</p>
+
+	<div id="demo-identity" class="demo-result">
+		<!-- Will be populated by JavaScript -->
+	</div>
+
+	<h2>Interactive Learning</h2>
+
+	<p>Throughout this tutorial, you'll find:</p>
+
+	<ul>
+		<li><strong>Live Demonstrations:</strong> See lambda calculus in action</li>
+		<li><strong>Interactive Widgets:</strong> Experiment with functions yourself</li>
+		<li><strong>Visual Reductions:</strong> Watch step-by-step evaluation</li>
+		<li><strong>Practical Examples:</strong> Real code you can run and modify</li>
+	</ul>
+
+	<div class="warning-box">
+		<strong>JavaScript Limitations:</strong> Lambda calculus is elegant and infinite, but JavaScript has practical limits. Deeply recursive functions may cause stack overflow errors. We'll highlight these limitations and explain workarounds.
+	</div>
+
+	<h2>Ready to Begin?</h2>
+
+	<p>Start with <a href="chapters/01-combinators.html">Chapter 1: Combinators</a> to learn the foundational building blocks of lambda calculus.</p>
+
+	<div class="chapter-nav">
+		<div></div>
+		<a href="chapters/01-combinators.html">Start Chapter 1 →</a>
+	</div>
+
+	<script type="module">
+		import { Id } from './lib/combinators.js'
+
+		// Simple demo
+		const result = Id("Lambda Calculus!")
+		document.getElementById('demo-identity').innerHTML = `
+			<strong>Demo:</strong> Id("Lambda Calculus!") = "${result}"
+		`
+		document.getElementById('demo-identity').className = 'demo-result success'
+	</script>
+</body>
+</html>

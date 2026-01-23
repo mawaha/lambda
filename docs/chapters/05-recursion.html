@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 5: Recursion - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 5: Recursion</h1>
+
+	<p>Recursion is a function calling itself. In lambda calculus, we can't directly reference a function by name inside its own definition. We need special techniques to achieve recursion. This chapter explores recursive functions like factorial and Fibonacci.</p>
+
+	<h2>What is Recursion?</h2>
+
+	<p>A recursive function has two parts:</p>
+
+	<ul>
+		<li><strong>Base case:</strong> When to stop recursing</li>
+		<li><strong>Recursive case:</strong> How to break down the problem</li>
+	</ul>
+
+	<p>Example - Factorial:</p>
+	<pre><code>factorial(0) = 1                    // Base case
+factorial(n) = n × factorial(n-1)   // Recursive case</code></pre>
+
+	<h2>Factorial in Lambda Calculus</h2>
+
+	<p>Here's how we implement factorial using Church encodings:</p>
+
+	<pre><code>const Factorial = n => If(isZero(n))
+	(() => One)
+	(() => Multiply(n)(Factorial(Decrement(n))()))</code></pre>
+
+	<p>Notice it returns a <strong>thunk</strong> (a function that delays computation) to avoid infinite evaluation.</p>
+
+	<h3>Why Thunks?</h3>
+
+	<p>Without thunks, the If statement would eagerly evaluate both branches, causing infinite recursion even when n is zero. Thunks delay evaluation until we explicitly call them with <code>()</code>.</p>
+
+	<div class="info-box">
+		<strong>Thunk:</strong> A function that takes no arguments and delays computation until called.
+		<pre><code>() => expression  // Thunk - won't evaluate until called</code></pre>
+	</div>
+
+	<h3>Using Factorial</h3>
+
+	<pre><code>const result = Factorial(Five)()  // Call the thunk!
+toInt(result)  // 120</code></pre>
+
+	<div id="demo-factorial"></div>
+
+	<h2>Interactive Factorial Calculator</h2>
+
+	<div class="warning-box">
+		<strong>Stack Limit:</strong> JavaScript limits recursion depth. Values above 12 may cause stack overflow. Lambda calculus itself has no such limits - this is a JavaScript constraint.
+	</div>
+
+	<div id="widget-factorial"></div>
+
+	<h2>Fibonacci Sequence</h2>
+
+	<p>The Fibonacci sequence is another classic recursive problem:</p>
+
+	<pre><code>fib(0) = 0
+fib(1) = 1
+fib(n) = fib(n-1) + fib(n-2)</code></pre>
+
+	<h3>Implementation</h3>
+
+	<pre><code>const Fibonacci = a => If(isZero(a))
+	(() => Zero)
+	(If(isOne(a))
+		(() => One)
+		(() => Add
+			(Fibonacci(Subtract(a)(One))())
+			(Fibonacci(Subtract(a)(Two))())
+		)
+	)</code></pre>
+
+	<p>Fibonacci has two base cases (n=0 and n=1) and the recursive case sums the two previous values.</p>
+
+	<div id="demo-fibonacci"></div>
+
+	<h2>Interactive Fibonacci Calculator</h2>
+
+	<div class="warning-box">
+		<strong>Stack Limit:</strong> Fibonacci grows exponentially in calls. Values above 10 may be very slow or crash. This demonstrates why algorithms matter!
+	</div>
+
+	<div id="widget-fibonacci"></div>
+
+	<h2>Understanding Stack Depth</h2>
+
+	<p>Each recursive call adds a frame to JavaScript's call stack. Eventually, the stack fills up:</p>
+
+	<div class="info-box">
+		<strong>Fibonacci(5) call tree:</strong>
+		<pre>
+fib(5)
+├── fib(4)
+│   ├── fib(3)
+│   │   ├── fib(2)
+│   │   │   ├── fib(1) → 1
+│   │   │   └── fib(0) → 0
+│   │   └── fib(1) → 1
+│   └── fib(2)
+│       ├── fib(1) → 1
+│       └── fib(0) → 0
+└── fib(3)
+    ├── fib(2)
+    │   ├── fib(1) → 1
+    │   └── fib(0) → 0
+    └── fib(1) → 1
+		</pre>
+	</div>
+
+	<p>Notice how many duplicate calls there are! Fibonacci(5) computes Fibonacci(2) three times.</p>
+
+	<h2>Lazy Evaluation</h2>
+
+	<p>Thunks enable <em>lazy evaluation</em> - computation is delayed until the value is needed:</p>
+
+	<pre><code>// Eager - both branches evaluate immediately
+If(condition)(expensive())(alsoExpensive())
+
+// Lazy - branches are thunks, only one evaluates
+If(condition)(() => expensive())(() => alsoExpensive())()</code></pre>
+
+	<p>This is essential for recursion in lambda calculus!</p>
+
+	<h2>JavaScript Limitations</h2>
+
+	<p>Lambda calculus is mathematically pure and infinite, but JavaScript has practical constraints:</p>
+
+	<ul>
+		<li><strong>Stack depth:</strong> Limited call stack (~10,000-50,000 frames)</li>
+		<li><strong>No tail call optimization:</strong> Most JS engines don't optimize tail recursion</li>
+		<li><strong>Performance:</strong> Function calls have overhead</li>
+	</ul>
+
+	<div class="info-box">
+		<strong>Advanced Topic:</strong> Techniques like <em>trampolining</em> and <em>Y-combinator</em> can work around these limits. The Y-combinator enables recursion without self-reference!
+	</div>
+
+	<div class="exercise-box">
+		<h3>Exercises</h3>
+		<ol>
+			<li>What is Factorial(Three)?</li>
+			<li>What is Fibonacci(Four)?</li>
+			<li>Why do we need thunks for recursion?</li>
+			<li>How many function calls does Fibonacci(5) make?</li>
+			<li>What would happen without the base cases?</li>
+		</ol>
+	</div>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Recursion requires base cases and recursive cases</li>
+		<li>Thunks delay evaluation to prevent infinite recursion</li>
+		<li>Factorial multiplies decreasing numbers</li>
+		<li>Fibonacci sums previous values</li>
+		<li>JavaScript has stack depth limitations</li>
+		<li>Lambda calculus theory has no such limits</li>
+		<li>Lazy evaluation is powerful for control flow</li>
+	</ul>
+
+	<div class="chapter-nav">
+		<a href="04-data-structures.html">← Chapter 4: Data Structures</a>
+		<a href="06-advanced.html">Chapter 6: Advanced Topics →</a>
+	</div>
+
+	<script type="module">
+		import { Zero, One, Two, Three, Four, Five } from '../lib/lamb.js'
+		import { Factorial } from '../lib/factorial.js'
+		import { Fibonacci } from '../lib/fibonacci.js'
+		import { toInt, toChurch } from '../lib/utils.js'
+		import { InteractiveDemo, safeLambda } from '../js/interactive.js'
+
+		const demo = new InteractiveDemo()
+
+		// Factorial demo
+		demo.registerDemo('demo-factorial', () => {
+			try {
+				const results = [
+					`Factorial(Zero)() = ${toInt(Factorial(Zero)())}`,
+					`Factorial(One)() = ${toInt(Factorial(One)())}`,
+					`Factorial(Three)() = ${toInt(Factorial(Three)())}`,
+					`Factorial(Five)() = ${toInt(Factorial(Five)())}`
+				]
+				return results.join('<br>')
+			} catch (e) {
+				return 'Error: ' + e.message
+			}
+		})
+
+		// Fibonacci demo
+		demo.registerDemo('demo-fibonacci', () => {
+			try {
+				const results = [
+					`Fibonacci(Zero)() = ${toInt(Fibonacci(Zero)())}`,
+					`Fibonacci(One)() = ${toInt(Fibonacci(One)())}`,
+					`Fibonacci(Two)() = ${toInt(Fibonacci(Two)())}`,
+					`Fibonacci(Three)() = ${toInt(Fibonacci(Three)())}`,
+					`Fibonacci(Four)() = ${toInt(Fibonacci(Four)())}`,
+					`Fibonacci(Five)() = ${toInt(Fibonacci(Five)())}`
+				]
+				return results.join('<br>')
+			} catch (e) {
+				return 'Error: ' + e.message
+			}
+		})
+
+		// Factorial widget
+		demo.registerWidget('widget-factorial', {
+			inputs: [
+				{ name: 'n', label: 'n (max 12)', type: 'number', default: 5, min: 0, max: 12 }
+			],
+			maxValue: 12,
+			compute: ({ n }) => {
+				if (n > 12) {
+					return {
+						error: true,
+						message: 'Value exceeds safe limit of 12. Factorial grows rapidly and deep recursion causes JavaScript stack overflow. Try a smaller number.'
+					}
+				}
+
+				try {
+					const church = toChurch(n)
+					const result = Factorial(church)()
+					const value = toInt(result)
+					return {
+						'Input': n,
+						'Factorial': value,
+						'Formula': `${n}! = ${value}`
+					}
+				} catch (error) {
+					return {
+						error: true,
+						message: `Stack overflow error. Lambda calculus uses recursion which exceeds JavaScript's call stack limit. This is a limitation of the JavaScript runtime, not lambda calculus itself.`
+					}
+				}
+			}
+		})
+
+		// Fibonacci widget
+		demo.registerWidget('widget-fibonacci', {
+			inputs: [
+				{ name: 'n', label: 'n (max 10)', type: 'number', default: 5, min: 0, max: 10 }
+			],
+			maxValue: 10,
+			compute: ({ n }) => {
+				if (n > 10) {
+					return {
+						error: true,
+						message: 'Value exceeds safe limit of 10. Fibonacci has exponential time complexity and causes stack overflow for large values. Try a smaller number.'
+					}
+				}
+
+				try {
+					const church = toChurch(n)
+					const result = Fibonacci(church)()
+					const value = toInt(result)
+					return {
+						'Input': n,
+						'Fibonacci': value,
+						'Note': n > 7 ? 'This took many recursive calls!' : 'Computed successfully'
+					}
+				} catch (error) {
+					return {
+						error: true,
+						message: `Stack overflow error. Fibonacci makes exponential recursive calls. This demonstrates why algorithm efficiency matters, even in pure lambda calculus!`
+					}
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 1: Combinators - Lambda Calculus Tutorial</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<link rel="stylesheet" href="../css/code-theme.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 1: Combinators</h1>
+
+	<p>Combinators are pure lambda functions with no free variables. They're the atoms from which we'll build more complex functions. In this chapter, we'll explore three fundamental combinators.</p>
+
+	<h2>What is a Pure Function?</h2>
+
+	<p>A <strong>pure function</strong> contains only <em>bound</em> variables. A variable is bound if it appears in the function's parameter list.</p>
+
+	<pre><code>// Pure: all variables are bound
+λx.x        // x is bound by λx
+
+// Not pure: y is free (not in parameters)
+λx.xy       // x is bound, y is free</code></pre>
+
+	<h2>The Identity Combinator (I)</h2>
+
+	<p>The Identity combinator is the simplest possible function. It takes one argument and returns it unchanged.</p>
+
+	<div class="info-box">
+		<strong>Lambda notation:</strong> λx.x<br>
+		<strong>JavaScript:</strong> <code>x => x</code>
+	</div>
+
+	<pre><code>const Id = x => x</code></pre>
+
+	<p>The Identity function might seem useless, but it's a crucial building block. It represents the concept of "doing nothing" or "returning unchanged."</p>
+
+	<h3>Examples</h3>
+
+	<div id="demo-id-number"></div>
+	<div id="demo-id-string"></div>
+	<div id="demo-id-function"></div>
+
+	<h2>The Constant Combinator (K)</h2>
+
+	<p>The Constant combinator creates a function that always returns its first argument, ignoring the second.</p>
+
+	<div class="info-box">
+		<strong>Lambda notation:</strong> λx.λy.x<br>
+		<strong>JavaScript:</strong> <code>x => y => x</code>
+	</div>
+
+	<pre><code>const K = x => y => x</code></pre>
+
+	<p>K is a <em>curried</em> function that takes two arguments. It returns a function that "remembers" the first argument and ignores whatever you pass it next.</p>
+
+	<h3>Examples</h3>
+
+	<div id="demo-k-basic"></div>
+	<div id="demo-k-partial"></div>
+
+	<h3>Understanding Currying</h3>
+
+	<p>When you call <code>K(5)</code>, you get back a function that always returns 5:</p>
+
+	<pre><code>const alwaysFive = K(5)
+
+alwaysFive(1)      // Returns: 5
+alwaysFive(100)    // Returns: 5
+alwaysFive("hi")   // Returns: 5</code></pre>
+
+	<div id="demo-k-currying"></div>
+
+	<h2>The Self-Application Combinator (M)</h2>
+
+	<p>The M combinator (also called Mockingbird) applies a function to itself. This is where lambda calculus starts to get interesting!</p>
+
+	<div class="info-box">
+		<strong>Lambda notation:</strong> λf.f f<br>
+		<strong>JavaScript:</strong> <code>f => f(f)</code>
+	</div>
+
+	<pre><code>const M = f => f(f)</code></pre>
+
+	<p>M takes a function and applies it to itself. This might seem strange, but it's powerful.</p>
+
+	<h3>Example with Identity</h3>
+
+	<div id="demo-m-identity"></div>
+
+	<div class="warning-box">
+		<strong>Warning:</strong> Be careful with M! Some applications cause infinite loops:
+		<pre><code>M(M)  // Applies M to M, which applies M to M, which...</code></pre>
+		This is called the Omega combinator and will crash JavaScript!
+	</div>
+
+	<h2>Why Combinators Matter</h2>
+
+	<p>These simple combinators are building blocks for everything in lambda calculus:</p>
+
+	<ul>
+		<li><strong>Id</strong> represents identity and will be used for extracting values</li>
+		<li><strong>K</strong> represents choice and selection (you'll see this in booleans!)</li>
+		<li><strong>M</strong> represents self-reference and is key to recursion</li>
+	</ul>
+
+	<h2>Interactive Explorer</h2>
+
+	<p>Try applying combinators yourself:</p>
+
+	<div id="widget-combinator-explorer"></div>
+
+	<div class="exercise-box">
+		<h3>Exercises</h3>
+		<ol>
+			<li>What does <code>Id(Id)</code> return?</li>
+			<li>What does <code>K(K)(Id)</code> return?</li>
+			<li>Can you explain why <code>M(Id)</code> returns Id?</li>
+			<li>What is the difference between <code>Id</code> and <code>K(x)</code>?</li>
+		</ol>
+	</div>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Combinators are pure functions with no free variables</li>
+		<li>Id returns its argument unchanged</li>
+		<li>K creates constant functions that ignore their second argument</li>
+		<li>M applies a function to itself</li>
+		<li>These simple building blocks enable complex computation</li>
+	</ul>
+
+	<div class="chapter-nav">
+		<a href="../index.html">← Home</a>
+		<a href="02-church-encodings.html">Chapter 2: Church Encodings →</a>
+	</div>
+
+	<script type="module">
+		import { Id, K, M } from '../lib/combinators.js'
+		import { InteractiveDemo } from '../js/interactive.js'
+
+		const demo = new InteractiveDemo()
+
+		// Register demos
+		demo.registerDemo('demo-id-number', () => {
+			return `Id(42) = ${Id(42)}`
+		})
+
+		demo.registerDemo('demo-id-string', () => {
+			return `Id("hello") = "${Id("hello")}"`
+		})
+
+		demo.registerDemo('demo-id-function', () => {
+			const result = Id(Id)
+			return `Id(Id) = ${result === Id ? 'Id (itself!)' : 'unexpected'}`
+		})
+
+		demo.registerDemo('demo-k-basic', () => {
+			return `K(5)(10) = ${K(5)(10)}`
+		})
+
+		demo.registerDemo('demo-k-partial', () => {
+			return `K("first")("second") = "${K("first")("second")}"`
+		})
+
+		demo.registerDemo('demo-k-currying', () => {
+			const alwaysFive = K(5)
+			return `
+				const alwaysFive = K(5)<br>
+				alwaysFive(1) = ${alwaysFive(1)}<br>
+				alwaysFive(100) = ${alwaysFive(100)}<br>
+				alwaysFive("hi") = ${alwaysFive("hi")}
+			`
+		})
+
+		demo.registerDemo('demo-m-identity', () => {
+			const result = M(Id)
+			return `M(Id) = ${result === Id ? 'Id (because Id(Id) returns Id)' : result}`
+		})
+
+		// Interactive widget
+		demo.registerWidget('widget-combinator-explorer', {
+			inputs: [
+				{ name: 'value', label: 'Test Value', type: 'number', default: 7, min: 0, max: 100 }
+			],
+			compute: ({ value }) => {
+				return {
+					id: Id(value),
+					k_value_10: K(value)(10),
+					k_10_value: K(10)(value)
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>
