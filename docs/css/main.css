@@ -319,7 +319,13 @@ pre code {
 	border-radius: 16px;
 	margin: 20px 0;
 	border: 3px solid var(--border-color);
-	box-shadow: var(--card-shadow);
+	box-shadow: var(--card-shadow), 0 0 0 1px rgba(108, 92, 231, 0.1);
+	transition: all 0.3s ease;
+}
+
+.widget-form:hover {
+	box-shadow: var(--hover-shadow), 0 0 0 2px rgba(108, 92, 231, 0.2);
+	border-color: rgba(108, 92, 231, 0.3);
 }
 
 .widget-field {
