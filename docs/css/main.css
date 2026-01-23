@@ -43,7 +43,9 @@ h1, h2, h3, h4 {
 
 h1 {
 	font-size: 2.8em;
-	/* Gradient underline instead of solid */
+	/* Fallback color for accessibility */
+	color: var(--secondary-color);
+	/* Gradient text with fallback */
 	background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -52,6 +54,13 @@ h1 {
 	border-image: linear-gradient(90deg, var(--secondary-color), var(--accent-color)) 1;
 	padding-bottom: 0.3em;
 	margin-bottom: 0.5em;
+}
+
+@supports not (background-clip: text) {
+	h1 {
+		color: var(--secondary-color);
+		background: none;
+	}
 }
 
 h2 {
