@@ -110,8 +110,16 @@ pre {
 	padding: 20px;
 	border-radius: 12px;
 	overflow-x: auto;
-	border-left: 4px solid var(--secondary-color);
+	border-left: 4px solid transparent;
+	border-image: linear-gradient(180deg, var(--secondary-color), var(--lambda-color)) 1;
 	box-shadow: var(--card-shadow);
+	transition: all 0.3s ease;
+	position: relative;
+}
+
+pre:hover {
+	box-shadow: var(--hover-shadow);
+	border-image: linear-gradient(180deg, var(--lambda-color), var(--accent-color)) 1;
 }
 
 pre code {
