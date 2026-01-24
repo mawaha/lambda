@@ -42,6 +42,35 @@ const Three = f => x => f(f(f(x)))</code></pre>
 
 	<p>Notice that Zero is the same as False! This is no coincidence - they both represent "nothing" or "empty."</p>
 
+	<h3>Repeated Application in JavaScript</h3>
+
+	<p>Church numerals capture the essence of "doing something n times" - a pattern you use constantly:</p>
+
+	<pre><code>// Arrays apply functions repeatedly
+[1, 2, 3].map(fn)           // Apply fn to each element (3 times)
+[1, 2, 3].forEach(fn)       // Execute fn 3 times
+array.reduce(fn, init)      // Apply fn repeatedly to accumulate
+
+// Utility function (this IS a Church numeral!)
+function repeat(n, fn) {
+	for (let i = 0; i < n; i++) fn();
+}
+
+repeat(5, () => console.log('Hello'));  // Church numeral Five!
+
+// Animation frames
+requestAnimationFrame(function loop(count) {
+	if (count < 60) {
+		draw();
+		requestAnimationFrame(() => loop(count + 1));
+	}
+});
+
+// Lodash/Ramda
+_.times(5, fn)  // Apply fn 5 times - Church numeral pattern!</code></pre>
+
+	<p>Every loop, every <code>map</code>, every <code>reduce</code> is conceptually a Church numeral - they all encode "repeat this n times."</p>
+
 	<h2>Converting to JavaScript Numbers</h2>
 
 	<p>To see what a Church numeral represents, we convert it to a JavaScript number by starting with 0 and using increment as our function:</p>
@@ -130,6 +159,46 @@ addOneThenDouble(5)  // addOne(5) = 6, then double(6) = 12</code></pre>
 	<pre><code>const processData = Compose(capitalize)(Compose(trim)(lowercase))</code></pre>
 
 	<p>This is point-free style - defining functions without mentioning their arguments.</p>
+
+	<h3>Composition in the Wild</h3>
+
+	<p>You compose functions every day in JavaScript:</p>
+
+	<pre><code>// Promise chains are composition!
+fetch(url)
+	.then(r => r.json())          // Parse as JSON
+	.then(data => data.users)     // Extract users
+	.then(users => users[0])      // Get first user
+// Each .then composes with the previous result
+
+// Array method chaining
+users
+	.map(u => u.name)
+	.filter(name => name.length > 5)
+	.map(name => name.toUpperCase())
+	.sort()
+// This is composition! Each step feeds into the next
+
+// Unix pipes (the OG composition)
+cat file.txt | grep "error" | wc -l
+// Same pattern: output of one becomes input of next
+
+// Build tool pipelines
+const pipeline = compose(
+	minify,
+	transpile,
+	lint
+);
+
+// Ramda/Lodash compose/pipe
+const transform = R.pipe(
+	R.map(x => x * 2),
+	R.filter(x => x > 10),
+	R.take(5)
+);
+transform([1, 2, 3, 4, 5, 6, 7, 8]);</code></pre>
+
+	<p>Composition is how we build complex transformations from simple, testable pieces. It's one of the most powerful patterns in programming!</p>
 
 	<h2>Multiplication is Composition!</h2>
 
