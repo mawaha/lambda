@@ -92,7 +92,8 @@ export class InteractiveDemo {
 
 			const values = {}
 			Object.entries(inputElements).forEach(([name, el]) => {
-				values[name] = parseInt(el.value, 10)
+				// Parse as number only if input type is 'number', otherwise keep as string
+				values[name] = el.type === 'number' ? parseInt(el.value, 10) : el.value
 			})
 
 			// Check max values
