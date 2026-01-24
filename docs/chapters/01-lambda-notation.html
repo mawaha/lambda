@@ -32,7 +32,7 @@
 
 	<p>Variables are just names. They can represent anything - numbers, functions, other variables. In lambda calculus, we typically use single letters:</p>
 
-	<pre data-lang="lambda"><code>x
+	<pre><code>x
 y
 f
 g</code></pre>
@@ -123,7 +123,7 @@ const Id = x => x</code></pre>
 
 	<h3>Examples</h3>
 
-	<pre data-lang="lambda"><code>λx.x
+	<pre><code>λx.x
 // x is bound (it appears after λx)
 
 λx.y
@@ -393,7 +393,7 @@ user.input()          // Depends on user action</code></pre>
 
 	<div id="demo-beta-1"></div>
 
-	<pre data-lang="lambda"><code>(λx.x) 5
+	<pre><code>(λx.x) 5
 → 5
 
 Why? Replace x with 5 in the body (which is just x)</code></pre>
@@ -402,7 +402,7 @@ Why? Replace x with 5 in the body (which is just x)</code></pre>
 
 	<div id="demo-beta-2"></div>
 
-	<pre data-lang="lambda"><code>(λx.λy.x) 3
+	<pre><code>(λx.λy.x) 3
 → λy.3
 
 Why? Replace x with 3 in the body (λy.x)
