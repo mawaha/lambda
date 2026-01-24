@@ -146,6 +146,106 @@ const counterReducer = (state = 0, action) => {
 
 	<p>Lambda calculus forces purity - you literally can't write impure functions because there's no concept of external state to access!</p>
 
+	<h2>Referential Transparency</h2>
+
+	<p>Pure functions have a powerful property called <strong>referential transparency</strong>: you can replace any function call with its result without changing the program's behavior. This is the foundation of equational reasoning about code.</p>
+
+	<h3>What is Referential Transparency?</h3>
+
+	<p>An expression is referentially transparent if you can substitute it with its value anywhere in your program and get the same result:</p>
+
+	<pre><code>// Referentially transparent
+const add = x => y => x + y;
+const result = add(2)(3);  // Always evaluates to 5
+
+// Anywhere you see add(2)(3), you can replace it with 5:
+const a = add(2)(3) + 10;   // 15
+const b = 5 + 10;            // 15 - same result!
+
+// NOT referentially transparent
+let counter = 0;
+const increment = () => ++counter;
+
+increment();  // Returns 1
+increment();  // Returns 2 - same call, different result!
+// Can't replace increment() with a value - result changes each time</code></pre>
+
+	<h3>Why It Matters in JavaScript</h3>
+
+	<p>Referential transparency enables powerful optimizations and reasoning:</p>
+
+	<pre><code>// React memoization - only works with referentially transparent components
+const MemoizedComponent = React.memo(Component);
+// React can safely cache: same props = same output, always
+
+// Reselect (Redux) - memoized selectors
+const getVisibleTodos = createSelector(
+	[getTodos, getFilter],
+	(todos, filter) => todos.filter(filter)
+);
+// Safe to cache because same inputs always give same output
+
+// Safe refactoring - can inline or extract
+const price = product.price * 1.2;
+// Can replace all uses of 'price' with (product.price * 1.2)
+
+// Parallel execution
+const results = await Promise.all([
+	fetchUser(1),
+	fetchUser(2),
+	fetchUser(3)
+]);
+// Safe because fetchUser(1) always returns the same user
+
+// Compiler optimizations
+const x = expensive(5);
+const y = expensive(5);
+// Compiler can optimize to:
+const x = expensive(5);
+const y = x;  // Reuse result!</code></pre>
+
+	<h3>Testing Benefits</h3>
+
+	<pre><code>// Referentially transparent = easy to test
+test('add function', () => {
+	expect(add(2)(3)).toBe(5);
+	expect(add(2)(3)).toBe(5);  // Same test, will always pass
+});
+
+// NOT referentially transparent = hard to test
+test('increment function', () => {
+	counter = 0;  // Need to reset state!
+	expect(increment()).toBe(1);
+	counter = 0;  // Reset again...
+	expect(increment()).toBe(1);
+});</code></pre>
+
+	<div class="info-box">
+		<strong>Referential transparency = pure function + deterministic output</strong><br>
+		No side effects, no mutations, same input always gives same output. This is why functional programming emphasizes purity - it makes code predictable and composable.
+	</div>
+
+	<h3>Breaking Referential Transparency</h3>
+
+	<p>These common patterns break referential transparency:</p>
+
+	<pre><code>// Reading external state
+const getDiscountedPrice = price => price * (1 - globalDiscount);
+
+// Modifying external state
+const addToCart = item => { cart.push(item); return cart.length; }
+
+// I/O operations (inherently impure)
+const readFile = path => fs.readFileSync(path);  // File might change
+const fetchData = url => fetch(url);              // Network might change
+
+// Non-deterministic operations
+Math.random()         // Different every time
+Date.now()            // Different every time
+user.input()          // Depends on user action</code></pre>
+
+	<p>In pure lambda calculus, all expressions are referentially transparent. In JavaScript, we choose when to break this for pragmatic reasons (I/O, randomness), but we isolate these effects to maintain reasoning about most of our code.</p>
+
 	<h2>Beta Reduction: Evaluation</h2>
 
 	<p>Beta reduction is how lambda calculus "runs" - it's the process of applying functions to arguments by substitution.</p>
