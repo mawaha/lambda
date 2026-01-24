@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chapter 1: Lambda Calculus Notation (Or: Learning the Language)</title>
+	<link rel="stylesheet" href="../css/hybrid-style.css">
+</head>
+<body>
+	<div class="nav">
+		<a href="../index.html">Home</a>
+		<a href="../index.html#chapters">Chapters</a>
+	</div>
+
+	<h1>Chapter 1: Lambda Calculus Notation (Or: Learning the Language)</h1>
+
+	<p>Before we start building with lambda calculus, we need to understand its notation. Think of this as learning the grammar of a new language - once you know the rules, everything else falls into place.</p>
+
+	<h2>The Three Building Blocks</h2>
+
+	<p>Lambda calculus has exactly three components:</p>
+
+	<ol>
+		<li><strong>Variables:</strong> x, y, z, f, etc.</li>
+		<li><strong>Abstraction:</strong> Creating functions (λx.E)</li>
+		<li><strong>Application:</strong> Calling functions (f x)</li>
+	</ol>
+
+	<p>That's it! Everything we'll build - numbers, booleans, data structures - comes from combining these three simple elements.</p>
+
+	<h2>Variables</h2>
+
+	<p>Variables are just names. They can represent anything - numbers, functions, other variables. In lambda calculus, we typically use single letters:</p>
+
+	<pre><code>x
+y
+f
+g</code></pre>
+
+	<p>Variables have no inherent meaning. The variable x doesn't "mean" anything until we give it a value.</p>
+
+	<h2>Abstraction: Creating Functions</h2>
+
+	<p>The λ (lambda) symbol introduces a function. The syntax is:</p>
+
+	<div class="info-box">
+		<strong>λ variable . body</strong><br>
+		Example: λx.x
+	</div>
+
+	<p>Let's break down <code>λx.x</code>:</p>
+
+	<ul>
+		<li><strong>λ</strong> - "Here comes a function"</li>
+		<li><strong>x</strong> - "The parameter is named x"</li>
+		<li><strong>.</strong> - "And the function body is..."</li>
+		<li><strong>x</strong> - "Just return x"</li>
+	</ul>
+
+	<p>In JavaScript, we write this as:</p>
+
+	<pre><code>// Lambda notation: λx.x
+const Id = x => x</code></pre>
+
+	<h3>More Examples</h3>
+
+	<pre><code>// Lambda: λx.y
+// JavaScript: x => y
+// "Take x, return y" (ignores x)
+
+// Lambda: λf.λx.f(x)
+// JavaScript: f => x => f(x)
+// "Take f, then take x, then apply f to x"</code></pre>
+
+	<h2>Application: Calling Functions</h2>
+
+	<p>Application means "call this function with this argument". We write it by placing terms next to each other:</p>
+
+	<div class="info-box">
+		<strong>(λx.x) y</strong><br>
+		Apply the function λx.x to the argument y
+	</div>
+
+	<p>In JavaScript:</p>
+
+	<pre><code>// Lambda: (λx.x) y
+// JavaScript: (x => x)(y)
+// Result: y</code></pre>
+
+	<h2>Bound vs Free Variables</h2>
+
+	<p>This is crucial for understanding lambda calculus:</p>
+
+	<ul>
+		<li><strong>Bound variable:</strong> A variable that appears after a λ is bound by that λ</li>
+		<li><strong>Free variable:</strong> A variable that isn't bound by any λ</li>
+	</ul>
+
+	<h3>Examples</h3>
+
+	<pre><code>λx.x
+// x is bound (it appears after λx)
+
+λx.y
+// x is bound, y is free (no λy to bind it)
+
+λx.λy.x
+// Both x and y are bound
+
+λf.f(x)
+// f is bound, x is free</code></pre>
+
+	<div class="info-box">
+		<strong>Pure functions</strong> (also called combinators) have no free variables. They're self-contained and portable.
+	</div>
+
+	<h2>Beta Reduction: Evaluation</h2>
+
+	<p>Beta reduction is how lambda calculus "runs" - it's the process of applying functions to arguments by substitution.</p>
+
+	<h3>The Rule</h3>
+
+	<div class="info-box">
+		<strong>(λx.E) y → E[x := y]</strong><br>
+		"Replace every x in E with y"
+	</div>
+
+	<h3>Worked Example 1</h3>
+
+	<div id="demo-beta-1"></div>
+
+	<pre><code>(λx.x) 5
+→ 5
+
+Why? Replace x with 5 in the body (which is just x)</code></pre>
+
+	<h3>Worked Example 2</h3>
+
+	<div id="demo-beta-2"></div>
+
+	<pre><code>(λx.λy.x) 3
+→ λy.3
+
+Why? Replace x with 3 in the body (λy.x)
+Result: λy.3 (a function that ignores its argument and returns 3)</code></pre>
+
+	<h3>Worked Example 3: Multiple Steps</h3>
+
+	<div id="demo-beta-3"></div>
+
+	<pre><code>(λx.λy.x) 3 4
+→ (λy.3) 4        [apply first function]
+→ 3               [apply second function]
+
+Step 1: (λx.λy.x) 3 becomes λy.3
+Step 2: (λy.3) 4 becomes 3</code></pre>
+
+	<h2>Alpha Conversion: Renaming Variables</h2>
+
+	<p>Sometimes we need to rename variables to avoid confusion. This is called alpha conversion, and it doesn't change the meaning of the function.</p>
+
+	<pre><code>λx.x  is the same as  λy.y  is the same as  λz.z
+
+All three mean "the identity function"</code></pre>
+
+	<p>We can rename a bound variable to any other name, as long as we rename it consistently throughout the function body.</p>
+
+	<div class="warning-box">
+		<strong>Caution:</strong> Don't rename to a variable that's already in use! <code>λx.λy.x</code> is NOT the same as <code>λy.λy.y</code>
+	</div>
+
+	<h2>Parentheses and Precedence</h2>
+
+	<p>Lambda calculus has conventions about when parentheses are needed:</p>
+
+	<h3>Application is Left-Associative</h3>
+
+	<pre><code>f g h  means  (f g) h
+// Apply f to g first, then apply the result to h</code></pre>
+
+	<h3>Abstraction Extends as Far Right as Possible</h3>
+
+	<pre><code>λx.x y  means  λx.(x y)
+// NOT (λx.x) y
+
+λx.λy.x y  means  λx.(λy.(x y))
+// The body of λx is everything after the dot</code></pre>
+
+	<h3>When to Use Parentheses</h3>
+
+	<pre><code>// These need parentheses:
+(λx.x) y        // Apply function to y
+(λx.x x) (λy.y) // Apply function to another function
+
+// These don't:
+λx.x y          // Function body is x y
+λx.λy.x         // Nested functions</code></pre>
+
+	<h2>Currying: One Argument at a Time</h2>
+
+	<p>In lambda calculus, all functions take exactly one argument. Multi-argument functions are created by nesting:</p>
+
+	<pre><code>// Want: function that takes x and y, returns x
+// Write: λx.λy.x
+
+// This is actually:
+λx.(λy.x)
+// "A function that takes x and returns (a function that takes y and returns x)"</code></pre>
+
+	<p>In JavaScript:</p>
+
+	<pre><code>// Curried (lambda calculus style)
+const K = x => y => x
+
+K(5)(10)        // Returns 5
+const always5 = K(5)
+always5(10)     // Returns 5</code></pre>
+
+	<div class="info-box">
+		This technique is called <strong>currying</strong> (named after Haskell Curry). We'll use it constantly in the coming chapters.
+	</div>
+
+	<h2>Interactive Beta Reduction</h2>
+
+	<p>Try reducing some lambda expressions yourself:</p>
+
+	<div id="widget-reduction-explorer"></div>
+
+	<h2>Key Takeaways</h2>
+
+	<ul>
+		<li>Lambda calculus has three parts: variables, abstraction (λx.E), and application (f x)</li>
+		<li>Bound variables are introduced by λ; free variables come from outside</li>
+		<li>Beta reduction is substitution: (λx.E) y → E[x := y]</li>
+		<li>Alpha conversion lets us rename bound variables</li>
+		<li>Functions take one argument at a time (currying)</li>
+		<li>Application is left-associative; abstraction extends right</li>
+	</ul>
+
+	<div class="info-box">
+		<strong>Next up:</strong> Now that you understand the notation, we'll start building! In Chapter 2, we'll explore combinators - simple but powerful functions that become the building blocks for everything else.
+	</div>
+
+	<div class="chapter-nav">
+		<a href="../index.html">← Home</a>
+		<a href="02-combinators.html">Chapter 2: Combinators →</a>
+	</div>
+
+	<script type="module">
+		import { InteractiveDemo } from '../js/interactive.js'
+
+		const demo = new InteractiveDemo()
+
+		// Beta reduction demonstrations
+		demo.registerDemo('demo-beta-1', () => {
+			return `
+				<strong>Step-by-step:</strong><br>
+				(λx.x) 5<br>
+				→ [x := 5] in body (x)<br>
+				→ 5
+			`
+		})
+
+		demo.registerDemo('demo-beta-2', () => {
+			return `
+				<strong>Step-by-step:</strong><br>
+				(λx.λy.x) 3<br>
+				→ [x := 3] in body (λy.x)<br>
+				→ λy.3
+			`
+		})
+
+		demo.registerDemo('demo-beta-3', () => {
+			return `
+				<strong>Step-by-step:</strong><br>
+				(λx.λy.x) 3 4<br>
+				→ (λy.3) 4<br>
+				→ [y := 4] in body (3)<br>
+				→ 3
+			`
+		})
+
+		// Simple interactive widget
+		demo.registerWidget('widget-reduction-explorer', {
+			inputs: [
+				{
+					name: 'expression',
+					label: 'Try reducing (λx.x) applied to:',
+					type: 'text',
+					default: 'hello'
+				}
+			],
+			compute: ({ expression }) => {
+				// Simple simulation of reduction
+				return {
+					original: `(λx.x) "${expression}"`,
+					reduced: `"${expression}"`,
+					explanation: "The identity function returns its argument unchanged"
+				}
+			}
+		})
+
+		demo.runDemos()
+		demo.setupWidgets()
+	</script>
+</body>
+</html>
