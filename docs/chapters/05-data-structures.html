@@ -29,6 +29,38 @@ const Second = p => p(False)</code></pre>
 
 	<div id="demo-pair-review"></div>
 
+	<h3>Pairs in JavaScript</h3>
+
+	<p>Pairs are everywhere in JavaScript - you use them constantly without thinking about it:</p>
+
+	<pre><code>// Array destructuring (pairs!)
+const [first, second] = [1, 2];
+const [head, ...tail] = array;
+
+// React useState returns a pair!
+const [count, setCount] = useState(0);
+// First: the value
+// Second: the setter function
+
+// Objects as pairs
+const point = { x: 10, y: 20 };  // Pair of coordinates
+const { x, y } = point;
+
+// Map/WeakMap entries
+map.set(key, value);  // Stores pairs
+for (let [key, value] of map) { ... }
+
+// Node.js callback pattern
+callback(error, data);  // Pair: error or result
+
+// Function returning multiple values
+function divMod(a, b) {
+	return [Math.floor(a / b), a % b];  // Pair of results
+}
+const [quotient, remainder] = divMod(17, 5);</code></pre>
+
+	<p>Pairs are the simplest compound data structure - they let you group exactly two related values together.</p>
+
 	<h2>Lists as Nested Pairs</h2>
 
 	<p>A list is built from nested pairs. Each pair contains:</p>
@@ -68,6 +100,38 @@ const list2 = Append(Two)(list1)          // [2, 1]
 const list3 = Append(Three)(list2)        // [3, 2, 1]</code></pre>
 
 	<div id="demo-build-list"></div>
+
+	<h3>Functional Lists vs JavaScript Arrays</h3>
+
+	<p>Lambda calculus lists are "linked lists" - very different from JavaScript arrays. But the patterns are familiar:</p>
+
+	<pre><code>// JavaScript array destructuring
+const [head, ...tail] = [1, 2, 3, 4];
+// head = 1
+// tail = [2, 3, 4]
+
+// This IS the lambda calculus list pattern!
+// First(list) = head
+// Second(list) = tail
+
+// Immutable list operations (React/Redux style)
+const newArray = [newItem, ...oldArray];  // Prepend (like Append!)
+const [first, ...rest] = array;           // Head/tail split
+
+// Recursive array processing (functional style)
+function sum(arr) {
+	if (arr.length === 0) return 0;
+	const [head, ...tail] = arr;
+	return head + sum(tail);  // Head + recursive call on tail
+}
+
+// This is exactly how lambda calculus lists work!</code></pre>
+
+	<p>The key difference: JavaScript arrays have random access (fast <code>array[5]</code>), while lambda lists must traverse from the start. But the head/tail pattern is identical!</p>
+
+	<div class="info-box">
+		<strong>Immutability matters:</strong> In React and Redux, you never mutate arrays - you always create new ones. This is the lambda calculus philosophy! Lists are immutable by nature.
+	</div>
 
 	<h2>List Operations</h2>
 
