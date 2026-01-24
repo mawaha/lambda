@@ -48,28 +48,36 @@ g</code></pre>
 		Example: λx.x
 	</div>
 
-	<div style="background: #f8f9fa; padding: 30px; margin: 30px 0; border-radius: 8px; border: 2px solid #e0e0e0;">
-		<div style="text-align: center; margin-bottom: 30px;">
-			<div style="display: inline-flex; align-items: center; gap: 15px; font-size: 36px; font-family: Georgia, serif;">
-				<div style="position: relative;">
+	<div style="padding: 40px 20px; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 50px;">
+			<div style="display: inline-flex; align-items: flex-end; gap: 30px; font-size: 42px; font-family: Georgia, serif;">
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+					<div style="font-size: 11px; font-family: sans-serif; color: #666; font-weight: normal; text-align: center; padding: 6px 12px; background: white; border: 1px solid #6c5ce7; border-radius: 4px;">
+						Lambda<br/>symbol
+					</div>
 					<span style="color: #e74c3c; font-weight: bold;">λ</span>
-					<div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666; white-space: nowrap;">Lambda<br/>symbol</div>
 				</div>
-				<div style="position: relative;">
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+					<div style="font-size: 11px; font-family: sans-serif; color: #666; font-weight: normal; padding: 6px 12px; background: white; border: 1px solid #6c5ce7; border-radius: 4px;">
+						Parameter
+					</div>
 					<span style="color: #2ecc71; font-weight: bold;">x</span>
-					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666;">Parameter</div>
 				</div>
-				<div style="position: relative;">
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+					<div style="font-size: 11px; font-family: sans-serif; color: #666; font-weight: normal; padding: 6px 12px; background: white; border: 1px solid #6c5ce7; border-radius: 4px;">
+						Separator
+					</div>
 					<span style="color: #3498db; font-weight: bold;">.</span>
-					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666;">Separator</div>
 				</div>
-				<div style="position: relative;">
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+					<div style="font-size: 11px; font-family: sans-serif; color: #666; font-weight: normal; text-align: center; padding: 6px 12px; background: white; border: 1px solid #6c5ce7; border-radius: 4px;">
+						Function<br/>body
+					</div>
 					<span style="color: #f39c12; font-weight: bold;">x</span>
-					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666; white-space: nowrap;">Function<br/>body</div>
 				</div>
 			</div>
 		</div>
-		<div style="text-align: center; color: #666; font-style: italic;">
+		<div style="text-align: center; color: #666; font-style: italic; font-size: 15px;">
 			"A function that takes x and returns x"
 		</div>
 	</div>
@@ -359,21 +367,23 @@ user.input()          // Depends on user action</code></pre>
 // → 5 + 1
 // → 6</code></pre>
 
-	<div style="background: #f8f9fa; padding: 40px; margin: 30px 0; border-radius: 8px; border: 2px solid #e0e0e0;">
-		<div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 20px;">
+	<div style="padding: 30px 0; margin: 30px 0; overflow-x: auto;">
+		<div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+			<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
 				(λx.x + 1) 5
 			</div>
-			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
-			<div style="font-size: 14px; color: #666; font-style: italic;">Substitute 5 for x</div>
-			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
-			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 20px;">
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+				<div style="font-size: 24px; color: #6c5ce7;">→</div>
+				<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">substitute</div>
+			</div>
+			<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
 				<span style="background: #fff3cd; padding: 4px 8px; border-radius: 4px;">5</span> + 1
 			</div>
-			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
-			<div style="font-size: 14px; color: #666; font-style: italic;">Evaluate</div>
-			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
-			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 20px; font-weight: bold;">
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+				<div style="font-size: 24px; color: #6c5ce7;">→</div>
+				<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">evaluate</div>
+			</div>
+			<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; white-space: nowrap;">
 				6
 			</div>
 		</div>
