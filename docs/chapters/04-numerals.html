@@ -85,14 +85,68 @@ const Five = Increment(Four)</code></pre>
 	<div id="demo-add"></div>
 	<div id="visualize-add"></div>
 
-	<h2>Multiplication</h2>
+	<h2>Function Composition</h2>
 
-	<p>Multiplication is function composition! To multiply n1 by n2, compose the functions:</p>
+	<p>Before we tackle multiplication, we need to understand one of the most fundamental concepts in functional programming: <strong>composition</strong>.</p>
 
-	<pre><code>const Compose = f => g => x => f(g(x))
-const Multiply = Compose</code></pre>
+	<h3>What is Composition?</h3>
 
-	<p>Think about it: Two(f) applies f twice. Three(Two(f)) applies "apply f twice" three times, giving you f six times!</p>
+	<p>Composition means "combining functions to create new functions." If you have two functions f and g, their composition creates a new function that applies g first, then applies f to the result:</p>
+
+	<div class="info-box">
+		<strong>Compose(f)(g)(x) = f(g(x))</strong><br>
+		"Apply g to x, then apply f to the result"
+	</div>
+
+	<pre><code>const Compose = f => g => x => f(g(x))</code></pre>
+
+	<h3>Non-Numeric Example</h3>
+
+	<p>Let's see composition with simple JavaScript functions before we use it with numerals:</p>
+
+	<pre><code>// Simple functions
+const addOne = x => x + 1
+const double = x => x * 2
+
+// Compose them
+const doubleThenAddOne = Compose(addOne)(double)
+const addOneThenDouble = Compose(double)(addOne)
+
+doubleThenAddOne(5)  // double(5) = 10, then addOne(10) = 11
+addOneThenDouble(5)  // addOne(5) = 6, then double(6) = 12</code></pre>
+
+	<div id="demo-compose-simple"></div>
+
+	<p>Notice that order matters! Compose applies functions right-to-left: <code>Compose(f)(g)</code> does g first, then f.</p>
+
+	<h3>Why Composition Matters</h3>
+
+	<p>Composition lets us build complex functions from simple ones. Instead of writing:</p>
+
+	<pre><code>const processData = x => capitalize(trim(lowercase(x)))</code></pre>
+
+	<p>We can write:</p>
+
+	<pre><code>const processData = Compose(capitalize)(Compose(trim)(lowercase))</code></pre>
+
+	<p>This is point-free style - defining functions without mentioning their arguments.</p>
+
+	<h2>Multiplication is Composition!</h2>
+
+	<p>Now here's the beautiful insight: multiplication of Church numerals is just function composition.</p>
+
+	<pre><code>const Multiply = Compose</code></pre>
+
+	<p>Why does this work? Think about what Church numerals do:</p>
+
+	<ul>
+		<li><code>Two(f)</code> means "apply f twice"</li>
+		<li><code>Three(f)</code> means "apply f three times"</li>
+		<li><code>Three(Two(f))</code> means "apply (apply f twice) three times"</li>
+		<li>That's the same as applying f 2 × 3 = 6 times!</li>
+	</ul>
+
+	<div id="demo-multiply-explanation"></div>
 
 	<div id="demo-multiply"></div>
 	<div id="visualize-multiply"></div>
@@ -155,6 +209,7 @@ const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
 		<ol>
 			<li>What is toInt(Add(Two)(Three))?</li>
 			<li>What is toInt(Multiply(Four)(Zero))?</li>
+			<li>If you compose "add 3" with "multiply by 2", what happens to the input 5?</li>
 			<li>Can you explain why Multiply is the same as Compose?</li>
 			<li>What happens with Subtract(Two)(Five)?</li>
 			<li>What is toInt(Power(Two)(Three))?</li>
@@ -166,8 +221,10 @@ const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
 	<ul>
 		<li>Church numerals represent numbers as repeated function application</li>
 		<li>The number n applies a function n times</li>
+		<li><strong>Composition</strong> combines functions: Compose(f)(g)(x) = f(g(x))</li>
+		<li>Composition is a fundamental building block for creating complex functions</li>
 		<li>Addition is repeated increment</li>
-		<li>Multiplication is function composition</li>
+		<li>Multiplication emerges naturally from composition</li>
 		<li>Subtraction uses pairs and shifting</li>
 		<li>Exponentiation applies a number as a function</li>
 		<li>All arithmetic can be done with only functions</li>
@@ -203,6 +260,34 @@ const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
 				toInt(Increment(Zero)) = ${toInt(Increment(Zero))}<br>
 				toInt(Increment(Three)) = ${toInt(Increment(Three))}<br>
 				toInt(Increment(Five)) = ${toInt(Increment(Five))}
+			`
+		})
+
+		// Composition demos
+		demo.registerDemo('demo-compose-simple', () => {
+			const addOne = x => x + 1
+			const double = x => x * 2
+			const Compose = f => g => x => f(g(x))
+
+			const doubleThenAddOne = Compose(addOne)(double)
+			const addOneThenDouble = Compose(double)(addOne)
+
+			return `
+				doubleThenAddOne(5) = ${doubleThenAddOne(5)}<br>
+				(double 5 first → 10, then addOne → 11)<br>
+				<br>
+				addOneThenDouble(5) = ${addOneThenDouble(5)}<br>
+				(addOne 5 first → 6, then double → 12)
+			`
+		})
+
+		demo.registerDemo('demo-multiply-explanation', () => {
+			return `
+				Two applies a function 2 times<br>
+				Three applies a function 3 times<br>
+				Three(Two(f)) applies "do f twice" three times = 6 times total<br>
+				<br>
+				This is why Multiply = Compose!
 			`
 		})
 
