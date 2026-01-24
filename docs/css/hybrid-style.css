@@ -509,3 +509,83 @@ p {
 .exercise-box {
 	animation: fadeIn 0.3s ease;
 }
+
+/* Step-by-step reduction visualizer */
+.reduction-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 20px;
+	background: white;
+	border-radius: 8px;
+	margin-top: 10px;
+}
+
+.reduction-step {
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 6px;
+	border-left: 3px solid var(--accent);
+}
+
+.reduction-step.final {
+	background: #d4edda;
+	border-left-color: var(--success);
+}
+
+.step-header {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+	margin-bottom: 8px;
+}
+
+.step-number {
+	font-weight: bold;
+	color: var(--accent);
+	font-size: 14px;
+}
+
+.step-label {
+	color: #666;
+	font-size: 13px;
+	font-style: italic;
+}
+
+.step-expression {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 16px;
+	padding: 10px;
+	background: white;
+	border-radius: 4px;
+	margin: 5px 0;
+}
+
+.step-expression code {
+	background: none;
+	padding: 0;
+	color: #2c3e50;
+}
+
+.step-expression mark {
+	background: #fff3cd;
+	padding: 2px 4px;
+	border-radius: 3px;
+	color: #856404;
+	font-weight: bold;
+}
+
+.step-explanation {
+	margin-top: 8px;
+	color: #555;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.step-arrow {
+	text-align: center;
+	color: var(--accent);
+	font-size: 24px;
+	font-weight: bold;
+	margin: 5px 0;
+}

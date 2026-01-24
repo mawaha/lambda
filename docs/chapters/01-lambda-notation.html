@@ -544,7 +544,7 @@ always5(10)     // Returns 5</code></pre>
 			`
 		})
 
-		// Simple interactive widget
+		// Interactive widget with step-by-step reduction
 		demo.registerWidget('widget-reduction-explorer', {
 			inputs: [
 				{
@@ -555,11 +555,26 @@ always5(10)     // Returns 5</code></pre>
 				}
 			],
 			compute: ({ expression }) => {
-				// Simple simulation of reduction
+				// Show step-by-step beta reduction
 				return {
-					original: `(λx.x) "${expression}"`,
-					reduced: `"${expression}"`,
-					explanation: "The identity function returns its argument unchanged"
+					steps: [
+						{
+							expression: `(λx.x) "${expression}"`,
+							label: 'Initial Expression',
+							explanation: 'The identity function (λx.x) is applied to the argument',
+							highlight: `"${expression}"`
+						},
+						{
+							expression: `[x := "${expression}"] in body (x)`,
+							explanation: `Substitute "${expression}" for the parameter x in the function body`,
+							highlight: `"${expression}"`
+						},
+						{
+							expression: `"${expression}"`,
+							label: 'Result',
+							explanation: 'The identity function returns its argument unchanged'
+						}
+					]
 				}
 			}
 		})

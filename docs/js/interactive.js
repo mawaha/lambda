@@ -153,9 +153,50 @@ export class InteractiveDemo {
 			return result ? 'True' : 'False'
 		}
 		if (typeof result === 'object') {
+			// Check if it's a step-by-step result
+			if (result.steps) {
+				return this.renderSteps(result.steps)
+			}
 			return JSON.stringify(result, null, 2)
 		}
 		return String(result)
+	}
+
+	// Render step-by-step reduction
+	renderSteps(steps) {
+		let html = '<div class="reduction-steps">'
+
+		steps.forEach((step, index) => {
+			const isFirst = index === 0
+			const isLast = index === steps.length - 1
+
+			html += `
+				<div class="reduction-step ${isLast ? 'final' : ''}">
+					<div class="step-header">
+						<span class="step-number">${isFirst ? 'Start' : `Step ${index}`}</span>
+						${step.label ? `<span class="step-label">${step.label}</span>` : ''}
+					</div>
+					<div class="step-expression">${this.highlightExpression(step.expression, step.highlight)}</div>
+					${step.explanation ? `<div class="step-explanation">${step.explanation}</div>` : ''}
+				</div>
+			`
+
+			if (!isLast) {
+				html += '<div class="step-arrow">↓</div>'
+			}
+		})
+
+		html += '</div>'
+		return html
+	}
+
+	// Highlight parts of an expression
+	highlightExpression(expression, highlight) {
+		if (!highlight) return `<code>${expression}</code>`
+
+		// Replace the highlighted part with a span
+		const highlighted = expression.replace(highlight, `<mark>${highlight}</mark>`)
+		return `<code>${highlighted}</code>`
 	}
 }
 
