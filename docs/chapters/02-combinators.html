@@ -63,17 +63,71 @@
 	<div id="demo-k-basic"></div>
 	<div id="demo-k-partial"></div>
 
-	<h3>Understanding Currying</h3>
+	<h3>Understanding Currying in Depth</h3>
 
-	<p>When you call <code>K(5)</code>, you get back a function that always returns 5:</p>
+	<p>K is our first real encounter with currying. Let's break down exactly what's happening:</p>
 
-	<pre><code>const alwaysFive = K(5)
+	<pre><code>const K = x => y => x
+
+// This is shorthand for:
+const K = x => {
+  return y => {
+    return x
+  }
+}</code></pre>
+
+	<p>When you call <code>K</code>, here's the step-by-step process:</p>
+
+	<ol>
+		<li>Call <code>K(5)</code> - the outer function receives 5 and binds it to x</li>
+		<li>Returns a new function: <code>y => 5</code></li>
+		<li>That returned function ignores y and always returns 5</li>
+	</ol>
+
+	<pre><code>const alwaysFive = K(5)  // Returns: y => 5
 
 alwaysFive(1)      // Returns: 5
 alwaysFive(100)    // Returns: 5
 alwaysFive("hi")   // Returns: 5</code></pre>
 
 	<div id="demo-k-currying"></div>
+
+	<h3>Currying vs Uncurried Functions</h3>
+
+	<p>Compare these two versions of the same function:</p>
+
+	<pre><code>// Uncurried (traditional JavaScript)
+const constantUncurried = (x, y) => x
+
+constantUncurried(5, 10)  // Returns: 5
+
+// Curried (lambda calculus style)
+const K = x => y => x
+
+K(5)(10)                  // Returns: 5
+const always5 = K(5)
+always5(10)               // Returns: 5 (partial application!)</code></pre>
+
+	<p>The curried version is more flexible - you can "partially apply" it by calling it with just one argument.</p>
+
+	<h3>Partial Application in Action</h3>
+
+	<p>Currying enables powerful patterns through partial application:</p>
+
+	<pre><code>// Create specialized functions from K
+const alwaysTrue = K(true)
+const alwaysFalse = K(false)
+const alwaysZero = K(0)
+
+alwaysTrue("anything")   // true
+alwaysFalse(42)          // false
+alwaysZero([1, 2, 3])    // 0</code></pre>
+
+	<p>This pattern - creating specific functions from general ones - is fundamental to functional programming.</p>
+
+	<div class="info-box">
+		<strong>Why "currying"?</strong> Named after logician Haskell Curry (who also has a programming language named after him). Though actually invented by Moses Schönfinkel!
+	</div>
 
 	<h2>The Self-Application Combinator (M)</h2>
 
@@ -128,9 +182,10 @@ alwaysFive("hi")   // Returns: 5</code></pre>
 
 	<ul>
 		<li>Combinators are pure functions with no free variables</li>
-		<li>Id returns its argument unchanged</li>
-		<li>K creates constant functions that ignore their second argument</li>
-		<li>M applies a function to itself</li>
+		<li>Id returns its argument unchanged - the simplest combinator</li>
+		<li>K creates constant functions through currying: <code>K(x)(y) = x</code></li>
+		<li>Currying means taking arguments one at a time, enabling partial application</li>
+		<li>M applies a function to itself - important for recursion later</li>
 		<li>These simple building blocks enable complex computation</li>
 	</ul>
 
