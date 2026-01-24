@@ -16,6 +16,46 @@
 
 	<p>Combinators are pure lambda functions with no free variables. They're the atoms from which we'll build more complex functions. In this chapter, we'll explore three fundamental combinators.</p>
 
+	<div style="padding: 40px 20px; margin: 30px 0;">
+		<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 900px; margin: 0 auto;">
+			<div style="background: white; padding: 30px 20px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 32px; color: #e74c3c; font-family: Georgia, serif; margin-bottom: 15px; font-weight: bold;">I</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 14px; color: #666; margin-bottom: 15px;">λx.x</div>
+				<div style="font-size: 13px; margin-bottom: 20px;">Identity</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 15px 0;">
+					<div style="font-family: 'Courier New', monospace; font-size: 15px; margin: 8px 0;">
+						I(<span style="color: #e74c3c; font-weight: bold;">5</span>) → <span style="color: #28a745; font-weight: bold;">5</span>
+					</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Returns input unchanged</div>
+			</div>
+
+			<div style="background: white; padding: 30px 20px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 32px; color: #e74c3c; font-family: Georgia, serif; margin-bottom: 15px; font-weight: bold;">K</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 14px; color: #666; margin-bottom: 15px;">λx.λy.x</div>
+				<div style="font-size: 13px; margin-bottom: 20px;">Constant</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 15px 0;">
+					<div style="font-family: 'Courier New', monospace; font-size: 15px; margin: 8px 0;">
+						K(<span style="color: #e74c3c; font-weight: bold;">5</span>)(10) → <span style="color: #28a745; font-weight: bold;">5</span>
+					</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Returns first arg, ignores second</div>
+			</div>
+
+			<div style="background: white; padding: 30px 20px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 32px; color: #e74c3c; font-family: Georgia, serif; margin-bottom: 15px; font-weight: bold;">M</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 14px; color: #666; margin-bottom: 15px;">λf.f f</div>
+				<div style="font-size: 13px; margin-bottom: 20px;">Self-Application</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 15px 0;">
+					<div style="font-family: 'Courier New', monospace; font-size: 15px; margin: 8px 0;">
+						M(<span style="color: #e74c3c; font-weight: bold;">I</span>) → I(I) → <span style="color: #28a745; font-weight: bold;">I</span>
+					</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Applies function to itself</div>
+			</div>
+		</div>
+	</div>
+
 	<h2>What is a Pure Function?</h2>
 
 	<p>A <strong>pure function</strong> contains only <em>bound</em> variables. A variable is bound if it appears in the function's parameter list.</p>
@@ -141,6 +181,31 @@ alwaysFive("hi")   // Returns: 5</code></pre>
 
 	<div id="demo-k-currying"></div>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+			<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
+				K(5)
+			</div>
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+				<div style="font-size: 24px; color: #6c5ce7;">→</div>
+				<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">returns</div>
+			</div>
+			<div style="background: #fff3cd; padding: 18px 28px; border-radius: 8px; border: 2px solid #f39c12; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
+				y => 5
+			</div>
+			<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+				<div style="font-size: 24px; color: #6c5ce7;">→</div>
+				<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">apply to 10</div>
+			</div>
+			<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; white-space: nowrap;">
+				5
+			</div>
+		</div>
+		<div style="text-align: center; color: #666; font-style: italic; margin-top: 20px; font-size: 14px;">
+			K(5)(10) evaluates in two steps: first K(5) returns a function, then that function is applied to 10
+		</div>
+	</div>
+
 	<h3>Currying vs Uncurried Functions</h3>
 
 	<p>Compare these two versions of the same function:</p>
@@ -171,6 +236,44 @@ const alwaysZero = K(0)
 alwaysTrue("anything")   // true
 alwaysFalse(42)          // false
 alwaysZero([1, 2, 3])    // 0</code></pre>
+
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="max-width: 700px; margin: 0 auto;">
+			<div style="text-align: center; margin-bottom: 30px; font-size: 14px; color: #666; font-weight: 600;">
+				Partial Application: Create Specialized Functions
+			</div>
+			<div style="display: flex; flex-direction: column; gap: 25px;">
+				<div style="display: flex; align-items: center; gap: 15px;">
+					<div style="background: #f8f9fa; padding: 12px 20px; border-radius: 6px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 15px; min-width: 180px;">
+						K
+					</div>
+					<div style="font-size: 20px; color: #6c5ce7;">→</div>
+					<div style="flex: 1; font-size: 13px; color: #666;">General function (takes 2 args)</div>
+				</div>
+				<div style="display: flex; align-items: center; gap: 15px;">
+					<div style="background: #fff3cd; padding: 12px 20px; border-radius: 6px; border: 2px solid #f39c12; font-family: 'Courier New', monospace; font-size: 15px; min-width: 180px;">
+						K(true)
+					</div>
+					<div style="font-size: 20px; color: #6c5ce7;">→</div>
+					<div style="flex: 1; font-size: 13px; color: #666;">Specialized: always returns true</div>
+				</div>
+				<div style="display: flex; align-items: center; gap: 15px;">
+					<div style="background: #fff3cd; padding: 12px 20px; border-radius: 6px; border: 2px solid #f39c12; font-family: 'Courier New', monospace; font-size: 15px; min-width: 180px;">
+						K(false)
+					</div>
+					<div style="font-size: 20px; color: #6c5ce7;">→</div>
+					<div style="flex: 1; font-size: 13px; color: #666;">Specialized: always returns false</div>
+				</div>
+				<div style="display: flex; align-items: center; gap: 15px;">
+					<div style="background: #fff3cd; padding: 12px 20px; border-radius: 6px; border: 2px solid #f39c12; font-family: 'Courier New', monospace; font-size: 15px; min-width: 180px;">
+						K(0)
+					</div>
+					<div style="font-size: 20px; color: #6c5ce7;">→</div>
+					<div style="flex: 1; font-size: 13px; color: #666;">Specialized: always returns 0</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<p>This pattern - creating specific functions from general ones - is fundamental to functional programming.</p>
 
