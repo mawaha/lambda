@@ -29,6 +29,53 @@
 	<pre><code>factorial(0) = 1                    // Base case
 factorial(n) = n × factorial(n-1)   // Recursive case</code></pre>
 
+	<h3>Recursion in JavaScript</h3>
+
+	<p>You use recursion whenever you process nested structures:</p>
+
+	<pre><code>// DOM traversal (finding elements in nested HTML)
+function findElement(node, predicate) {
+	if (predicate(node)) return node;  // Base case
+	for (let child of node.children) {
+		const found = findElement(child, predicate);  // Recursive
+		if (found) return found;
+	}
+	return null;
+}
+
+// File system traversal (Node.js)
+function findFiles(dir, pattern) {
+	const results = [];
+	const files = fs.readdirSync(dir);
+
+	for (let file of files) {
+		const path = `${dir}/${file}`;
+		if (fs.statSync(path).isDirectory()) {
+			results.push(...findFiles(path, pattern));  // Recurse
+		} else if (path.match(pattern)) {
+			results.push(path);  // Base case
+		}
+	}
+	return results;
+}
+
+// Deep object search
+function findInObject(obj, key) {
+	if (obj[key]) return obj[key];  // Base case
+	for (let k in obj) {
+		if (typeof obj[k] === 'object') {
+			const found = findInObject(obj[k], key);  // Recursive
+			if (found) return found;
+		}
+	}
+}
+
+// React component tree walking
+// JSON deep manipulation
+// State tree updates in Redux</code></pre>
+
+	<p>Any time data has unknown depth, recursion is your tool!</p>
+
 	<h2>Factorial in Lambda Calculus</h2>
 
 	<p>Here's how we implement factorial using Church encodings:</p>
@@ -47,6 +94,40 @@ factorial(n) = n × factorial(n-1)   // Recursive case</code></pre>
 		<strong>Thunk:</strong> A function that takes no arguments and delays computation until called.
 		<pre><code>() => expression  // Thunk - won't evaluate until called</code></pre>
 	</div>
+
+	<h3>Thunks in JavaScript</h3>
+
+	<p>Thunking is a common pattern in JavaScript for delaying expensive computations:</p>
+
+	<pre><code>// React lazy loading (thunk!)
+const Component = React.lazy(() => import('./Component'));
+// import() doesn't run until the component is needed
+
+// Redux thunks - delayed actions
+const fetchUser = (id) => (dispatch) => {  // Returns a thunk
+	fetch(`/api/users/${id}`)
+		.then(user => dispatch({ type: 'USER_LOADED', user }));
+};
+
+// Avoiding immediate execution
+setTimeout(() => expensive(), 1000);  // Thunk delays execution
+
+// Memoization with thunks
+const cache = {};
+function memoize(key, thunk) {
+	if (!cache[key]) {
+		cache[key] = thunk();  // Only compute if not cached
+	}
+	return cache[key];
+}
+
+// Lazy evaluation
+const lazyValue = () => heavyComputation();  // Thunk
+if (needsValue) {
+	const result = lazyValue();  // Compute only when needed
+}</code></pre>
+
+	<p>Thunks are everywhere - they're how you control <em>when</em> code runs!</p>
 
 	<h3>Using Factorial</h3>
 
