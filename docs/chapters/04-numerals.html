@@ -42,6 +42,70 @@ const Three = f => x => f(f(f(x)))</code></pre>
 
 	<p>Notice that Zero is the same as False! This is no coincidence - they both represent "nothing" or "empty."</p>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 25px; font-size: 14px; color: #666; font-weight: 600;">
+			Church Numerals: Repeated Application
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto;">
+			<!-- Zero -->
+			<div style="background: white; padding: 25px 15px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-bottom: 10px;">0</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 11px; color: #666; margin-bottom: 15px;">λf.λx.x</div>
+				<div style="background: #f8f9fa; padding: 15px 10px; border-radius: 6px; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+					<div style="font-size: 13px; color: #666; font-style: italic;">
+						returns x<br/>unchanged
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; margin-top: 12px;">Zero applications</div>
+			</div>
+
+			<!-- One -->
+			<div style="background: white; padding: 25px 15px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-bottom: 10px;">1</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 11px; color: #666; margin-bottom: 15px;">λf.λx.f(x)</div>
+				<div style="background: #f8f9fa; padding: 15px 10px; border-radius: 6px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f(x)
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; margin-top: 12px;">One application</div>
+			</div>
+
+			<!-- Two -->
+			<div style="background: white; padding: 25px 15px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-bottom: 10px;">2</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 11px; color: #666; margin-bottom: 15px;">λf.λx.f(f(x))</div>
+				<div style="background: #f8f9fa; padding: 15px 10px; border-radius: 6px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f
+					</div>
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; margin-top: 12px;">Two applications</div>
+			</div>
+
+			<!-- Three -->
+			<div style="background: white; padding: 25px 15px; border-radius: 8px; border: 2px solid #6c5ce7; text-align: center;">
+				<div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-bottom: 10px;">3</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 11px; color: #666; margin-bottom: 15px;">λf.λx.f(f(f(x)))</div>
+				<div style="background: #f8f9fa; padding: 15px 10px; border-radius: 6px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f
+					</div>
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f
+					</div>
+					<div style="background: #6c5ce7; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace;">
+						f
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; margin-top: 12px;">Three applications</div>
+			</div>
+		</div>
+	</div>
+
 	<h3>Repeated Application in JavaScript</h3>
 
 	<p>Church numerals capture the essence of "doing something n times" - a pattern you use constantly:</p>
@@ -148,6 +212,43 @@ addOneThenDouble(5)  // addOne(5) = 6, then double(6) = 12</code></pre>
 
 	<p>Notice that order matters! Compose applies functions right-to-left: <code>Compose(f)(g)</code> does g first, then f.</p>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 25px; font-size: 14px; color: #666; font-weight: 600;">
+			Composition Flow: Compose(f)(g)(x) = f(g(x))
+		</div>
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+				<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
+					x
+				</div>
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+					<div style="font-size: 24px; color: #6c5ce7;">→</div>
+					<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">apply g</div>
+				</div>
+				<div style="background: #fff3cd; padding: 18px 28px; border-radius: 8px; border: 2px solid #f39c12; font-family: 'Courier New', monospace; font-size: 18px; white-space: nowrap;">
+					g(x)
+				</div>
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+					<div style="font-size: 24px; color: #6c5ce7;">→</div>
+					<div style="font-size: 11px; color: #666; font-style: italic; white-space: nowrap;">apply f</div>
+				</div>
+				<div style="background: white; padding: 18px 28px; border-radius: 8px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; white-space: nowrap;">
+					f(g(x))
+				</div>
+			</div>
+			<div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+				<div style="font-size: 14px; color: #666; margin-bottom: 15px;">Example: Compose(addOne)(double)(5)</div>
+				<div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-family: 'Courier New', monospace; font-size: 15px;">
+					<span>5</span>
+					<span style="color: #6c5ce7;">→</span>
+					<span style="color: #f39c12;">double(5) = 10</span>
+					<span style="color: #6c5ce7;">→</span>
+					<span style="color: #28a745; font-weight: bold;">addOne(10) = 11</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<h3>Why Composition Matters</h3>
 
 	<p>Composition lets us build complex functions from simple ones. Instead of writing:</p>
@@ -216,6 +317,62 @@ transform([1, 2, 3, 4, 5, 6, 7, 8]);</code></pre>
 	</ul>
 
 	<div id="demo-multiply-explanation"></div>
+
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 25px; font-size: 14px; color: #666; font-weight: 600;">
+			Why Multiply = Compose: Example with 2 × 3
+		</div>
+		<div style="max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; border: 2px solid #6c5ce7;">
+			<div style="display: flex; flex-direction: column; gap: 20px;">
+				<!-- Step 1 -->
+				<div style="background: #f8f9fa; padding: 20px; border-radius: 6px;">
+					<div style="font-weight: 600; margin-bottom: 10px; color: #6c5ce7;">Step 1: What are the numerals?</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;">
+						Two = λf.λx.f(f(x)) — applies f twice
+					</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;">
+						Three = λf.λx.f(f(f(x))) — applies f three times
+					</div>
+				</div>
+				<!-- Step 2 -->
+				<div style="background: #fff3cd; padding: 20px; border-radius: 6px;">
+					<div style="font-weight: 600; margin-bottom: 10px; color: #f39c12;">Step 2: Multiply(Two)(Three) = Compose(Two)(Three)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;">
+						= λf.Two(Three(f))
+					</div>
+					<div style="font-size: 13px; color: #666; margin-top: 10px; font-style: italic;">
+						Apply Three to f, then apply Two to the result
+					</div>
+				</div>
+				<!-- Step 3 -->
+				<div style="background: #d4edda; padding: 20px; border-radius: 6px;">
+					<div style="font-weight: 600; margin-bottom: 10px; color: #28a745;">Step 3: What does Three(f) do?</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;">
+						Three(f) = a function that applies f three times
+					</div>
+					<div style="font-size: 13px; color: #666; margin-top: 10px; font-style: italic;">
+						So we get a new function: let's call it "applyThrice"
+					</div>
+				</div>
+				<!-- Step 4 -->
+				<div style="background: #d1ecf1; padding: 20px; border-radius: 6px;">
+					<div style="font-weight: 600; margin-bottom: 10px; color: #0c5460;">Step 4: Now apply Two to that</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 14px; margin: 8px 0;">
+						Two(applyThrice) = applyThrice(applyThrice(x))
+					</div>
+					<div style="font-size: 13px; color: #666; margin-top: 10px; font-style: italic;">
+						Apply "f three times" twice = apply f six times!
+					</div>
+				</div>
+				<!-- Result -->
+				<div style="text-align: center; padding: 20px; background: white; border: 2px solid #28a745; border-radius: 6px;">
+					<div style="font-size: 16px; font-weight: bold; color: #28a745; font-family: 'Courier New', monospace;">
+						Result: f applied 2 × 3 = 6 times
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div id="demo-multiply"></div>
 	<div id="visualize-multiply"></div>
