@@ -37,6 +37,78 @@
 
 	<p>Let's prove lambda calculus meets all the requirements. We've already built everything we need!</p>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #666; font-weight: 600;">
+			Lambda Calculus: Turing Complete ✓
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 900px; margin: 0 auto;">
+			<!-- Data Storage -->
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #28a745;">
+				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+					<div style="font-size: 32px; color: #28a745;">✓</div>
+					<div style="font-size: 18px; font-weight: bold; color: #155724;">Data Storage</div>
+				</div>
+				<div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Booleans (True/False)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Numbers (Church numerals)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Pairs (grouping)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Lists (sequences)</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">All data represented as functions</div>
+			</div>
+
+			<!-- Conditional Logic -->
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #28a745;">
+				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+					<div style="font-size: 32px; color: #28a745;">✓</div>
+					<div style="font-size: 18px; font-weight: bold; color: #155724;">Conditional Logic</div>
+				</div>
+				<div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• If/Then/Else</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• And/Or/Not gates</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Comparison (isZero, EQ, LEQ)</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Decision-making through selection</div>
+			</div>
+
+			<!-- Repetition -->
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #28a745;">
+				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+					<div style="font-size: 32px; color: #28a745;">✓</div>
+					<div style="font-size: 18px; font-weight: bold; color: #155724;">Repetition</div>
+				</div>
+				<div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Recursion (Factorial, Fibonacci)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Thunking (lazy evaluation)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Y combinator (self-reference)</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Loops via recursive functions</div>
+			</div>
+
+			<!-- Arbitrary Computation -->
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #28a745;">
+				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+					<div style="font-size: 32px; color: #28a745;">✓</div>
+					<div style="font-size: 18px; font-weight: bold; color: #155724;">Arbitrary Computation</div>
+				</div>
+				<div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Composition (combine functions)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Arithmetic (Add, Multiply, etc.)</div>
+					<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 5px 0;">• Algorithms (any computable function)</div>
+				</div>
+				<div style="font-size: 12px; color: #666; font-style: italic;">Compute anything computable</div>
+			</div>
+		</div>
+		<div style="text-align: center; margin-top: 30px; padding: 20px; background: #d4edda; border-radius: 8px; max-width: 700px; margin-left: auto; margin-right: auto; border: 2px solid #28a745;">
+			<div style="font-size: 18px; font-weight: bold; color: #155724; margin-bottom: 10px;">
+				Result: Lambda Calculus = Universal Computer
+			</div>
+			<div style="font-size: 14px; color: #666;">
+				Can compute anything that any programming language or computer can compute
+			</div>
+		</div>
+	</div>
+
 	<h3>✓ Data Storage</h3>
 
 	<p>We have data structures built from pure functions:</p>
