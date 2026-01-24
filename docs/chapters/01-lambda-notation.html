@@ -114,6 +114,38 @@ const Id = x => x</code></pre>
 		<strong>Pure functions</strong> (also called combinators) have no free variables. They're self-contained and portable.
 	</div>
 
+	<h3>Pure Functions in JavaScript</h3>
+
+	<p>If you've done JavaScript development, you've heard about "pure functions." Now you know where the concept comes from! A pure function in JS is one with no free variables - it doesn't access anything outside its scope:</p>
+
+	<pre><code>// Impure - accesses free variable 'taxRate'
+let taxRate = 0.1;
+const addTax = price => price * (1 + taxRate);  // taxRate is free!
+
+// Pure - no free variables, everything is a parameter
+const addTax = taxRate => price => price * (1 + taxRate);</code></pre>
+
+	<p>Why JavaScript developers care about pure functions:</p>
+
+	<ul>
+		<li><strong>Testable:</strong> No setup needed, just call with inputs and check outputs</li>
+		<li><strong>No race conditions:</strong> Can't change shared state</li>
+		<li><strong>Memoizable:</strong> Same inputs always give same output, can cache safely</li>
+		<li><strong>Parallelizable:</strong> Safe to run in different threads/workers</li>
+		<li><strong>Redux reducers must be pure:</strong> Core requirement of Redux architecture</li>
+	</ul>
+
+	<pre><code>// Redux reducer - must be pure!
+const counterReducer = (state = 0, action) => {
+	switch (action.type) {
+		case 'INCREMENT': return state + 1;
+		case 'DECREMENT': return state - 1;
+		default: return state;
+	}
+}</code></pre>
+
+	<p>Lambda calculus forces purity - you literally can't write impure functions because there's no concept of external state to access!</p>
+
 	<h2>Beta Reduction: Evaluation</h2>
 
 	<p>Beta reduction is how lambda calculus "runs" - it's the process of applying functions to arguments by substitution.</p>
@@ -124,6 +156,17 @@ const Id = x => x</code></pre>
 		<strong>(λx.E) y → E[x := y]</strong><br>
 		"Replace every x in E with y"
 	</div>
+
+	<p><strong>For JavaScript developers:</strong> Beta reduction is just calling a function! When you write <code>((x) => x + 1)(5)</code>, JavaScript performs beta reduction - it substitutes 5 for x and returns 6. This isn't a metaphor - it's literally the same computational process that lambda calculus describes.</p>
+
+	<pre><code>// This JavaScript code:
+((x) => x + 1)(5)
+
+// Performs beta reduction:
+// (λx.x + 1) 5
+// → [x := 5] in (x + 1)
+// → 5 + 1
+// → 6</code></pre>
 
 	<h3>Worked Example 1</h3>
 
