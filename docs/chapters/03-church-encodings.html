@@ -33,6 +33,50 @@
 	<pre><code>const True = x => y => x
 const False = x => y => y</code></pre>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 800px; margin: 0 auto;">
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #28a745; text-align: center;">
+				<div style="font-size: 28px; color: #28a745; font-family: Georgia, serif; margin-bottom: 15px; font-weight: bold;">True</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 14px; color: #666; margin-bottom: 20px;">λx.λy.x</div>
+				<div style="margin: 25px 0;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0;">
+						<div style="background: #d4edda; padding: 12px 20px; border-radius: 6px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 14px;">
+							"first"
+						</div>
+						<div style="font-size: 20px; color: #28a745;">✓</div>
+					</div>
+					<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0; opacity: 0.4;">
+						<div style="background: #f8f9fa; padding: 12px 20px; border-radius: 6px; border: 2px solid #ccc; font-family: 'Courier New', monospace; font-size: 14px;">
+							"second"
+						</div>
+						<div style="font-size: 20px;">✗</div>
+					</div>
+				</div>
+				<div style="font-size: 13px; color: #666; margin-top: 20px; font-style: italic;">Selects first argument</div>
+			</div>
+
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #dc3545; text-align: center;">
+				<div style="font-size: 28px; color: #dc3545; font-family: Georgia, serif; margin-bottom: 15px; font-weight: bold;">False</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 14px; color: #666; margin-bottom: 20px;">λx.λy.y</div>
+				<div style="margin: 25px 0;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0; opacity: 0.4;">
+						<div style="background: #f8f9fa; padding: 12px 20px; border-radius: 6px; border: 2px solid #ccc; font-family: 'Courier New', monospace; font-size: 14px;">
+							"first"
+						</div>
+						<div style="font-size: 20px;">✗</div>
+					</div>
+					<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0;">
+						<div style="background: #f8d7da; padding: 12px 20px; border-radius: 6px; border: 2px solid #dc3545; font-family: 'Courier New', monospace; font-size: 14px;">
+							"second"
+						</div>
+						<div style="font-size: 20px; color: #dc3545;">✓</div>
+					</div>
+				</div>
+				<div style="font-size: 13px; color: #666; margin-top: 20px; font-style: italic;">Selects second argument</div>
+			</div>
+		</div>
+	</div>
+
 	<p>Notice that True is exactly the K combinator from Chapter 1! False is similar but returns the second argument instead.</p>
 
 	<h3>Examples</h3>
@@ -140,6 +184,70 @@ const color = theme.primary;</code></pre>
 
 	<div id="demo-not"></div>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #666; font-weight: 600;">
+			Logic Gates Flow
+		</div>
+		<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; max-width: 1000px; margin: 0 auto;">
+			<!-- AND -->
+			<div style="background: white; padding: 25px; border-radius: 8px; border: 2px solid #6c5ce7;">
+				<div style="text-align: center; font-weight: bold; margin-bottom: 20px; color: #6c5ce7; font-size: 16px;">AND</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 12px; text-align: center; color: #666; margin-bottom: 15px;">λx.λy.x(y)(x)</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0;">
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #28a745; font-weight: bold;">T</span> AND <span style="color: #28a745; font-weight: bold;">T</span> → <span style="color: #28a745; font-weight: bold;">T</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #28a745; font-weight: bold;">T</span> AND <span style="color: #dc3545; font-weight: bold;">F</span> → <span style="color: #dc3545; font-weight: bold;">F</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #dc3545; font-weight: bold;">F</span> AND <span style="color: #28a745; font-weight: bold;">T</span> → <span style="color: #dc3545; font-weight: bold;">F</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #dc3545; font-weight: bold;">F</span> AND <span style="color: #dc3545; font-weight: bold;">F</span> → <span style="color: #dc3545; font-weight: bold;">F</span>
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; text-align: center; font-style: italic; margin-top: 10px;">Both must be True</div>
+			</div>
+
+			<!-- OR -->
+			<div style="background: white; padding: 25px; border-radius: 8px; border: 2px solid #6c5ce7;">
+				<div style="text-align: center; font-weight: bold; margin-bottom: 20px; color: #6c5ce7; font-size: 16px;">OR</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 12px; text-align: center; color: #666; margin-bottom: 15px;">λx.λy.x(x)(y)</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0;">
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #28a745; font-weight: bold;">T</span> OR <span style="color: #28a745; font-weight: bold;">T</span> → <span style="color: #28a745; font-weight: bold;">T</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #28a745; font-weight: bold;">T</span> OR <span style="color: #dc3545; font-weight: bold;">F</span> → <span style="color: #28a745; font-weight: bold;">T</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #dc3545; font-weight: bold;">F</span> OR <span style="color: #28a745; font-weight: bold;">T</span> → <span style="color: #28a745; font-weight: bold;">T</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0;">
+						<span style="color: #dc3545; font-weight: bold;">F</span> OR <span style="color: #dc3545; font-weight: bold;">F</span> → <span style="color: #dc3545; font-weight: bold;">F</span>
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; text-align: center; font-style: italic; margin-top: 10px;">At least one must be True</div>
+			</div>
+
+			<!-- NOT -->
+			<div style="background: white; padding: 25px; border-radius: 8px; border: 2px solid #6c5ce7;">
+				<div style="text-align: center; font-weight: bold; margin-bottom: 20px; color: #6c5ce7; font-size: 16px;">NOT</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 12px; text-align: center; color: #666; margin-bottom: 15px;">λb.λx.λy.b(y)(x)</div>
+				<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0;">
+					<div style="font-size: 12px; margin: 8px 0; text-align: center;">
+						NOT <span style="color: #28a745; font-weight: bold;">T</span> → <span style="color: #dc3545; font-weight: bold;">F</span>
+					</div>
+					<div style="font-size: 12px; margin: 8px 0; text-align: center;">
+						NOT <span style="color: #dc3545; font-weight: bold;">F</span> → <span style="color: #28a745; font-weight: bold;">T</span>
+					</div>
+				</div>
+				<div style="font-size: 11px; color: #666; text-align: center; font-style: italic; margin-top: 10px;">Flips the value</div>
+			</div>
+		</div>
+	</div>
+
 	<h2>Interactive Truth Tables</h2>
 
 	<p>Explore how these logic operators work:</p>
@@ -158,6 +266,47 @@ const color = theme.primary;</code></pre>
 const Second = p => p(False)</code></pre>
 
 	<p>To extract values, we pass True (selects first) or False (selects second)!</p>
+
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="max-width: 700px; margin: 0 auto;">
+			<div style="text-align: center; margin-bottom: 25px; font-size: 14px; color: #666; font-weight: 600;">
+				Pairs Use Booleans as Selectors
+			</div>
+			<div style="background: white; padding: 30px; border-radius: 8px; border: 2px solid #6c5ce7;">
+				<div style="text-align: center; margin-bottom: 25px;">
+					<div style="font-family: 'Courier New', monospace; font-size: 16px; color: #666;">
+						Pair(10)(20)
+					</div>
+				</div>
+				<div style="display: flex; flex-direction: column; gap: 20px;">
+					<div style="display: flex; align-items: center; gap: 15px;">
+						<div style="background: #d4edda; padding: 12px 20px; border-radius: 6px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 14px; min-width: 120px; text-align: center;">
+							First
+						</div>
+						<div style="font-size: 20px; color: #6c5ce7;">→</div>
+						<div style="flex: 1; font-size: 13px; color: #666;">
+							Pass <span style="color: #28a745; font-weight: bold;">True</span> to select first value
+						</div>
+						<div style="background: white; padding: 12px 20px; border-radius: 6px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold;">
+							10
+						</div>
+					</div>
+					<div style="display: flex; align-items: center; gap: 15px;">
+						<div style="background: #f8d7da; padding: 12px 20px; border-radius: 6px; border: 2px solid #dc3545; font-family: 'Courier New', monospace; font-size: 14px; min-width: 120px; text-align: center;">
+							Second
+						</div>
+						<div style="font-size: 20px; color: #6c5ce7;">→</div>
+						<div style="flex: 1; font-size: 13px; color: #666;">
+							Pass <span style="color: #dc3545; font-weight: bold;">False</span> to select second value
+						</div>
+						<div style="background: white; padding: 12px 20px; border-radius: 6px; border: 2px solid #dc3545; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold;">
+							20
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<h3>Example</h3>
 
