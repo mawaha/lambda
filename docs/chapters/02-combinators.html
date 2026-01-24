@@ -45,6 +45,30 @@
 	<div id="demo-id-string"></div>
 	<div id="demo-id-function"></div>
 
+	<h3>Identity in the Wild</h3>
+
+	<p>You use the Identity function constantly in JavaScript, often without realizing it:</p>
+
+	<pre><code>// Array operations
+[1, 2, 3].map(x => x)           // Copy array with map
+[...array]                       // Spread is like Id for arrays
+
+// Functional programming
+Promise.resolve(value)           // Wrap value in promise (unchanged)
+Observable.of(value)             // RxJS - wrap in observable
+
+// Default values
+const identity = x => x;
+const transform = fn || identity; // If no fn, just return unchanged
+
+// React
+const Component = ({ children = x => x }) => children();
+
+// Lodash/Ramda
+_.identity(value)                // Explicit identity function</code></pre>
+
+	<p>The Identity pattern is everywhere because it represents "no transformation" - the base case for many operations.</p>
+
 	<h2>The Constant Combinator (K)</h2>
 
 	<p>The Constant combinator creates a function that always returns its first argument, ignoring the second.</p>
@@ -62,6 +86,31 @@
 
 	<div id="demo-k-basic"></div>
 	<div id="demo-k-partial"></div>
+
+	<h3>Constant in JavaScript</h3>
+
+	<p>The Constant pattern appears everywhere in JavaScript - any time you ignore an argument:</p>
+
+	<pre><code>// Event handlers (ignore the event object)
+button.addEventListener('click', () => console.log('clicked'));
+button.addEventListener('click', () => setCount(0));
+
+// Array transformations (ignore each element, return constant)
+[1, 2, 3].map(() => 0)           // Replace all with 0
+[1, 2, 3].map(() => 'same')      // Replace all with 'same'
+
+// Timers (ignore the timer ID)
+setTimeout(() => doThing(), 1000);
+
+// React event handlers
+<button onClick={() => setCount(0)}>  {/* Ignores event */}
+<input onChange={() => setOpen(false)}>  {/* Ignores event */}
+
+// Default fallbacks
+const value = userInput || DEFAULT;  // If falsy, use constant
+const name = user?.name ?? 'Guest';  // Nullish coalescing</code></pre>
+
+	<p>Every time you use <code>() => value</code> in JavaScript, you're using the Constant combinator pattern!</p>
 
 	<h3>Understanding Currying in Depth</h3>
 
@@ -128,6 +177,48 @@ alwaysZero([1, 2, 3])    // 0</code></pre>
 	<div class="info-box">
 		<strong>Why "currying"?</strong> Named after logician Haskell Curry (who also has a programming language named after him). Though actually invented by Moses Schönfinkel!
 	</div>
+
+	<h3>Currying in Production JavaScript</h3>
+
+	<p>Currying is used extensively in modern JavaScript libraries and frameworks:</p>
+
+	<pre><code>// Redux action creators
+const updateUser = userId => updates => ({
+	type: 'UPDATE_USER',
+	payload: { userId, updates }
+});
+
+const updateUser1 = updateUser(1);
+updateUser1({ name: 'Alice' });  // Specialized for user 1
+
+// Ramda/Lodash FP - all functions are curried
+const add = R.curry((a, b) => a + b);
+const add5 = add(5);
+[1, 2, 3].map(add5);  // [6, 7, 8]
+
+// React hooks return curried functions
+const [count, setCount] = useState(0);
+// setCount is like K - ignores previous value if you pass a value
+// onClick={() => setCount(0)} is the K pattern!
+
+// Logging with levels
+const log = level => message => console[level](message);
+const error = log('error');
+const warn = log('warn');
+error('Something went wrong!');  // console.error('Something went wrong!')
+
+// API calls with base configuration
+const api = baseUrl => endpoint => data =>
+	fetch(`${baseUrl}${endpoint}`, {
+		method: 'POST',
+		body: JSON.stringify(data)
+	});
+
+const myApi = api('https://api.example.com');
+const usersApi = myApi('/users');
+usersApi({ name: 'Bob' });  // POST to https://api.example.com/users</code></pre>
+
+	<p>Currying lets you create specialized functions from general ones - it's configuration through partial application!</p>
 
 	<h2>The Self-Application Combinator (M)</h2>
 
