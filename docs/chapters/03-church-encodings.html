@@ -39,6 +39,33 @@ const False = x => y => y</code></pre>
 
 	<div id="demo-bool-basic"></div>
 
+	<h3>Booleans in JavaScript</h3>
+
+	<p>You're already using Church booleans every time you write a ternary operator!</p>
+
+	<pre><code>// JavaScript ternary
+const result = condition ? thenValue : elseValue;
+
+// This is Church boolean selection!
+// condition selects between two values
+// True selects first (then), False selects second (else)
+
+// Examples you write every day:
+const status = isLoggedIn ? 'Welcome!' : 'Please log in';
+const value = userInput || DEFAULT_VALUE;  // Short-circuit OR
+const safeName = user && user.name;        // Short-circuit AND</code></pre>
+
+	<p><strong>Short-circuit evaluation</strong> is the Church boolean pattern:</p>
+
+	<pre><code>// || returns first truthy value (like OR choosing)
+const name = userName || guestName || 'Anonymous';
+
+// && returns first falsy value, or last value (like AND choosing)
+const greeting = isLoggedIn && user && `Hello, ${user.name}!`;
+
+// Nullish coalescing is even more explicit
+const value = userValue ?? defaultValue;</code></pre>
+
 	<h2>The If Conditional</h2>
 
 	<p>Since booleans are already choice functions, conditionals are trivial:</p>
@@ -49,6 +76,35 @@ const False = x => y => y</code></pre>
 
 	<div id="demo-if-true"></div>
 	<div id="demo-if-false"></div>
+
+	<h3>If Statements Everywhere</h3>
+
+	<p>The Church boolean If pattern appears constantly in JavaScript:</p>
+
+	<pre><code>// Traditional if statement
+if (condition) {
+	doThen();
+} else {
+	doElse();
+}
+
+// Ternary (Church boolean!)
+const result = condition ? doThen() : doElse();
+
+// React conditional rendering - pure Church booleans!
+{isLoggedIn ? <Dashboard /> : <Login />}
+{hasError && <ErrorMessage />}  // AND pattern
+{data || <Loading />}            // OR pattern
+
+// Function calls
+const handler = condition ? handleSuccess : handleError;
+handler(data);
+
+// Object property selection
+const theme = darkMode ? darkTheme : lightTheme;
+const color = theme.primary;</code></pre>
+
+	<p>Every time you conditionally render in React, you're using Church encodings! The component tree is built by boolean choice functions.</p>
 
 	<h2>Logic Operators</h2>
 
