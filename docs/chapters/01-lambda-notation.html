@@ -48,14 +48,31 @@ g</code></pre>
 		Example: λx.x
 	</div>
 
-	<p>Let's break down <code>λx.x</code>:</p>
-
-	<ul>
-		<li><strong>λ</strong> - "Here comes a function"</li>
-		<li><strong>x</strong> - "The parameter is named x"</li>
-		<li><strong>.</strong> - "And the function body is..."</li>
-		<li><strong>x</strong> - "Just return x"</li>
-	</ul>
+	<div style="background: #f8f9fa; padding: 30px; margin: 30px 0; border-radius: 8px; border: 2px solid #e0e0e0;">
+		<div style="text-align: center; margin-bottom: 30px;">
+			<div style="display: inline-flex; align-items: center; gap: 15px; font-size: 36px; font-family: Georgia, serif;">
+				<div style="position: relative;">
+					<span style="color: #e74c3c; font-weight: bold;">λ</span>
+					<div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666; white-space: nowrap;">Lambda<br/>symbol</div>
+				</div>
+				<div style="position: relative;">
+					<span style="color: #2ecc71; font-weight: bold;">x</span>
+					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666;">Parameter</div>
+				</div>
+				<div style="position: relative;">
+					<span style="color: #3498db; font-weight: bold;">.</span>
+					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666;">Separator</div>
+				</div>
+				<div style="position: relative;">
+					<span style="color: #f39c12; font-weight: bold;">x</span>
+					<div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 12px; font-family: sans-serif; color: #666; white-space: nowrap;">Function<br/>body</div>
+				</div>
+			</div>
+		</div>
+		<div style="text-align: center; color: #666; font-style: italic;">
+			"A function that takes x and returns x"
+		</div>
+	</div>
 
 	<p>In JavaScript, we write this as:</p>
 
@@ -114,6 +131,34 @@ const Id = x => x</code></pre>
 		<strong>Pure functions</strong> (also called combinators) have no free variables. They're self-contained and portable.
 	</div>
 
+	<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+		<div style="background: #d4edda; padding: 30px; border-radius: 8px; border: 2px solid #28a745;">
+			<h4 style="margin: 0 0 20px 0; color: #155724;">✓ Pure Function</h4>
+			<div style="font-family: 'Courier New', monospace; font-size: 18px; margin: 20px 0;">
+				λ<span style="background: #c3e6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">x</span>.λ<span style="background: #c3e6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">y</span>.<span style="background: #c3e6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">x</span>
+			</div>
+			<div style="font-size: 13px; color: #155724; margin-top: 15px;">
+				All variables bound<br/>
+				✓ Self-contained<br/>
+				✓ No external dependencies<br/>
+				✓ Portable and testable
+			</div>
+		</div>
+
+		<div style="background: #f8d7da; padding: 30px; border-radius: 8px; border: 2px solid #dc3545;">
+			<h4 style="margin: 0 0 20px 0; color: #721c24;">✗ Impure Function</h4>
+			<div style="font-family: 'Courier New', monospace; font-size: 18px; margin: 20px 0;">
+				λ<span style="background: #c3e6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">x</span>.<span style="background: #c3e6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">x</span> × <span style="background: #f5c6cb; padding: 4px 8px; border-radius: 4px; font-weight: bold;">y</span>
+			</div>
+			<div style="font-size: 13px; color: #721c24; margin-top: 15px;">
+				<span style="background: #c3e6cb; padding: 2px 6px; border-radius: 3px; font-weight: bold;">Green</span> = bound, <span style="background: #f5c6cb; padding: 2px 6px; border-radius: 3px; font-weight: bold;">Red</span> = free<br/>
+				✗ Depends on external y<br/>
+				✗ Not self-contained<br/>
+				✗ Harder to reason about
+			</div>
+		</div>
+	</div>
+
 	<h3>Pure Functions in JavaScript</h3>
 
 	<p>If you've done JavaScript development, you've heard about "pure functions." Now you know where the concept comes from! A pure function in JS is one with no free variables - it doesn't access anything outside its scope:</p>
@@ -169,6 +214,52 @@ const increment = () => ++counter;
 increment();  // Returns 1
 increment();  // Returns 2 - same call, different result!
 // Can't replace increment() with a value - result changes each time</code></pre>
+
+	<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+		<div style="background: white; padding: 30px; border-radius: 8px; border: 3px solid #28a745;">
+			<h4 style="margin: 0 0 20px 0; color: #155724; display: flex; align-items: center; gap: 10px;">
+				<span style="font-size: 24px;">✓</span> Referentially Transparent
+			</h4>
+			<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; margin: 15px 0;">
+const add = x => y => x + y;<br/>
+const result = add(2)(3);
+			</div>
+			<div style="background: #d4edda; padding: 20px; border-radius: 4px; border: 2px dashed #28a745; margin-top: 15px;">
+				<div style="font-weight: 600; margin-bottom: 10px; color: #155724;">Can substitute with value:</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
+					add(2)(3) + 10 <span style="color: #6c5ce7; font-weight: bold;">=</span> 5 + 10
+				</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
+					add(2)(3) * 2 <span style="color: #6c5ce7; font-weight: bold;">=</span> 5 * 2
+				</div>
+				<div style="font-style: italic; margin-top: 10px; font-size: 12px; color: #155724;">
+					Same call always returns same value
+				</div>
+			</div>
+		</div>
+
+		<div style="background: white; padding: 30px; border-radius: 8px; border: 3px solid #dc3545;">
+			<h4 style="margin: 0 0 20px 0; color: #721c24; display: flex; align-items: center; gap: 10px;">
+				<span style="font-size: 24px;">✗</span> NOT Referentially Transparent
+			</h4>
+			<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; margin: 15px 0;">
+let count = 0;<br/>
+const inc = () => ++count;
+			</div>
+			<div style="background: #f8d7da; padding: 20px; border-radius: 4px; border: 2px dashed #dc3545; margin-top: 15px;">
+				<div style="font-weight: 600; margin-bottom: 10px; color: #721c24;">Cannot substitute with value:</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
+					inc() <span style="color: #6c5ce7; font-weight: bold;">→</span> 1
+				</div>
+				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
+					inc() <span style="color: #6c5ce7; font-weight: bold;">→</span> 2
+				</div>
+				<div style="font-style: italic; margin-top: 10px; font-size: 12px; color: #721c24;">
+					Same call returns different values!
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<h3>Why It Matters in JavaScript</h3>
 
@@ -267,6 +358,26 @@ user.input()          // Depends on user action</code></pre>
 // → [x := 5] in (x + 1)
 // → 5 + 1
 // → 6</code></pre>
+
+	<div style="background: #f8f9fa; padding: 40px; margin: 30px 0; border-radius: 8px; border: 2px solid #e0e0e0;">
+		<div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 20px;">
+				(λx.x + 1) 5
+			</div>
+			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
+			<div style="font-size: 14px; color: #666; font-style: italic;">Substitute 5 for x</div>
+			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
+			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #6c5ce7; font-family: 'Courier New', monospace; font-size: 20px;">
+				<span style="background: #fff3cd; padding: 4px 8px; border-radius: 4px;">5</span> + 1
+			</div>
+			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
+			<div style="font-size: 14px; color: #666; font-style: italic;">Evaluate</div>
+			<div style="font-size: 28px; color: #6c5ce7;">↓</div>
+			<div style="background: white; padding: 20px 30px; border-radius: 8px; border: 2px solid #28a745; font-family: 'Courier New', monospace; font-size: 20px; font-weight: bold;">
+				6
+			</div>
+		</div>
+	</div>
 
 	<h3>Worked Example 1</h3>
 
