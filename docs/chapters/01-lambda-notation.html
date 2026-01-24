@@ -32,7 +32,7 @@
 
 	<p>Variables are just names. They can represent anything - numbers, functions, other variables. In lambda calculus, we typically use single letters:</p>
 
-	<pre><code>x
+	<pre data-lang="lambda"><code>x
 y
 f
 g</code></pre>
@@ -84,12 +84,12 @@ g</code></pre>
 
 	<p>In JavaScript, we write this as:</p>
 
-	<pre><code>// Lambda notation: λx.x
+	<pre data-lang="js"><code>// Lambda notation: λx.x
 const Id = x => x</code></pre>
 
 	<h3>More Examples</h3>
 
-	<pre><code>// Lambda: λx.y
+	<pre data-lang="js"><code>// Lambda: λx.y
 // JavaScript: x => y
 // "Take x, return y" (ignores x)
 
@@ -108,7 +108,7 @@ const Id = x => x</code></pre>
 
 	<p>In JavaScript:</p>
 
-	<pre><code>// Lambda: (λx.x) y
+	<pre data-lang="js"><code>// Lambda: (λx.x) y
 // JavaScript: (x => x)(y)
 // Result: y</code></pre>
 
@@ -123,7 +123,7 @@ const Id = x => x</code></pre>
 
 	<h3>Examples</h3>
 
-	<pre><code>λx.x
+	<pre data-lang="lambda"><code>λx.x
 // x is bound (it appears after λx)
 
 λx.y
@@ -171,7 +171,7 @@ const Id = x => x</code></pre>
 
 	<p>If you've done JavaScript development, you've heard about "pure functions." Now you know where the concept comes from! A pure function in JS is one with no free variables - it doesn't access anything outside its scope:</p>
 
-	<pre><code>// Impure - accesses free variable 'taxRate'
+	<pre data-lang="js"><code>// Impure - accesses free variable 'taxRate'
 let taxRate = 0.1;
 const addTax = price => price * (1 + taxRate);  // taxRate is free!
 
@@ -188,7 +188,7 @@ const addTax = taxRate => price => price * (1 + taxRate);</code></pre>
 		<li><strong>Redux reducers must be pure:</strong> Core requirement of Redux architecture</li>
 	</ul>
 
-	<pre><code>// Redux reducer - must be pure!
+	<pre data-lang="js"><code>// Redux reducer - must be pure!
 const counterReducer = (state = 0, action) => {
 	switch (action.type) {
 		case 'INCREMENT': return state + 1;
@@ -207,7 +207,7 @@ const counterReducer = (state = 0, action) => {
 
 	<p>An expression is referentially transparent if you can substitute it with its value anywhere in your program and get the same result:</p>
 
-	<pre><code>// Referentially transparent
+	<pre data-lang="js"><code>// Referentially transparent
 const add = x => y => x + y;
 const result = add(2)(3);  // Always evaluates to 5
 
@@ -393,7 +393,7 @@ user.input()          // Depends on user action</code></pre>
 
 	<div id="demo-beta-1"></div>
 
-	<pre><code>(λx.x) 5
+	<pre data-lang="lambda"><code>(λx.x) 5
 → 5
 
 Why? Replace x with 5 in the body (which is just x)</code></pre>
@@ -402,7 +402,7 @@ Why? Replace x with 5 in the body (which is just x)</code></pre>
 
 	<div id="demo-beta-2"></div>
 
-	<pre><code>(λx.λy.x) 3
+	<pre data-lang="lambda"><code>(λx.λy.x) 3
 → λy.3
 
 Why? Replace x with 3 in the body (λy.x)

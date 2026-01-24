@@ -111,21 +111,55 @@ code {
 }
 
 pre {
-	padding: 16px;
-	overflow: auto;
+	position: relative;
+	padding: 0;
+	overflow: hidden;
 	font-size: 85%;
 	line-height: 1.45;
-	background-color: var(--code-bg);
-	border-radius: 6px;
-	border-left: 3px solid var(--accent);
+	background-color: white;
+	border-radius: 8px;
+	border: 1px solid var(--code-border);
 	margin-bottom: 16px;
-	box-shadow: var(--shadow-sm);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+pre::before {
+	content: "JavaScript";
+	display: block;
+	padding: 8px 16px;
+	background: #f6f8fa;
+	border-bottom: 1px solid var(--code-border);
+	font-size: 12px;
+	font-weight: 600;
+	color: #666;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	letter-spacing: 0.3px;
+}
+
+/* Language-specific labels */
+pre[data-lang]::before {
+	content: attr(data-lang);
+}
+
+pre[data-lang="lambda"]::before {
+	content: "Lambda Calculus";
+}
+
+pre[data-lang="js"]::before,
+pre[data-lang="javascript"]::before {
+	content: "JavaScript";
+}
+
+pre[data-lang=""]::before {
+	content: "Code";
 }
 
 pre code {
-	padding: 0;
+	display: block;
+	padding: 16px;
 	margin: 0;
-	background-color: transparent;
+	background-color: var(--code-bg);
+	overflow-x: auto;
 	border: 0;
 	color: var(--text);
 	font-weight: normal;
