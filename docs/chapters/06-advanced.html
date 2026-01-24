@@ -3,9 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Chapter 6: Advanced Topics - Lambda Calculus Tutorial</title>
-	<link rel="stylesheet" href="../css/main.css">
-	<link rel="stylesheet" href="../css/code-theme.css">
+	<title>Chapter 6: Advanced Topics (Or: Artium Obscura Functionis*)</title>
+	<link rel="stylesheet" href="../css/hybrid-style.css">
 </head>
 <body>
 	<div class="nav">
@@ -13,7 +12,7 @@
 		<a href="../index.html#chapters">Chapters</a>
 	</div>
 
-	<h1>Chapter 6: Advanced Topics</h1>
+	<h1>Chapter 6: Advanced Topics (Or: Artium Obscura Functionis*)</h1>
 
 	<p>You've mastered the fundamentals of lambda calculus! This chapter explores advanced patterns and connections to modern functional programming.</p>
 
@@ -232,6 +231,12 @@ const Twice = fn => x => fn(fn(x))</code></pre>
 		<a href="05-recursion.html">← Chapter 5: Recursion</a>
 		<a href="../index.html">Home</a>
 	</div>
+
+	<footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e0e0e0; font-size: 0.85rem; color: #666; font-style: italic;">
+		<p>* Warning: May contain uncomputability</p>
+		<p>** Side effects may include infinite recursion and existential dread</p>
+		<p>*** Not to be read more than once</p>
+	</footer>
 
 	<script type="module">
 		import { Compose, Once, Twice, Flip, BiMap, Pair, First, Second, Increment, Power, Two, Three, Four } from '../lib/lamb.js'
