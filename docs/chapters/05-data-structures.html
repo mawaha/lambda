@@ -83,6 +83,62 @@ const [quotient, remainder] = divMod(17, 5);</code></pre>
 		<strong>List [1, 2, 3]:</strong> Pair(1)(Pair(2)(Pair(3)(Nil)))
 	</div>
 
+	<div style="padding: 30px 0; margin: 30px 0;">
+		<div style="text-align: center; margin-bottom: 25px; font-size: 14px; color: #666; font-weight: 600;">
+			List [1, 2, 3] as Nested Pairs
+		</div>
+		<div style="max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; border: 2px solid #6c5ce7;">
+			<div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+				<!-- First Pair -->
+				<div style="background: #e8f4f8; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8; position: relative;">
+					<div style="position: absolute; top: -12px; left: 10px; background: white; padding: 0 8px; font-size: 11px; color: #17a2b8; font-weight: bold;">
+						Pair
+					</div>
+					<div style="display: flex; gap: 15px;">
+						<div style="background: #d4edda; padding: 15px 20px; border-radius: 6px; border: 2px solid #28a745; text-align: center;">
+							<div style="font-size: 11px; color: #155724; margin-bottom: 5px;">head</div>
+							<div style="font-size: 20px; font-weight: bold; color: #28a745;">1</div>
+						</div>
+						<div style="font-size: 24px; align-self: center; color: #666;">→</div>
+						<!-- Second Pair -->
+						<div style="background: #e8f4f8; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8; position: relative;">
+							<div style="position: absolute; top: -12px; left: 10px; background: white; padding: 0 8px; font-size: 11px; color: #17a2b8; font-weight: bold;">
+								Pair
+							</div>
+							<div style="display: flex; gap: 15px;">
+								<div style="background: #d4edda; padding: 15px 20px; border-radius: 6px; border: 2px solid #28a745; text-align: center;">
+									<div style="font-size: 11px; color: #155724; margin-bottom: 5px;">head</div>
+									<div style="font-size: 20px; font-weight: bold; color: #28a745;">2</div>
+								</div>
+								<div style="font-size: 24px; align-self: center; color: #666;">→</div>
+								<!-- Third Pair -->
+								<div style="background: #e8f4f8; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8; position: relative;">
+									<div style="position: absolute; top: -12px; left: 10px; background: white; padding: 0 8px; font-size: 11px; color: #17a2b8; font-weight: bold;">
+										Pair
+									</div>
+									<div style="display: flex; gap: 15px;">
+										<div style="background: #d4edda; padding: 15px 20px; border-radius: 6px; border: 2px solid #28a745; text-align: center;">
+											<div style="font-size: 11px; color: #155724; margin-bottom: 5px;">head</div>
+											<div style="font-size: 20px; font-weight: bold; color: #28a745;">3</div>
+										</div>
+										<div style="font-size: 24px; align-self: center; color: #666;">→</div>
+										<div style="background: #f8d7da; padding: 15px 20px; border-radius: 6px; border: 2px solid #dc3545; text-align: center;">
+											<div style="font-size: 11px; color: #721c24; margin-bottom: 5px;">tail</div>
+											<div style="font-size: 14px; font-weight: bold; color: #dc3545; font-family: 'Courier New', monospace;">Nil</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="text-align: center; margin-top: 30px; font-size: 13px; color: #666; font-style: italic;">
+				Each pair contains: (1) the current element and (2) the rest of the list
+			</div>
+		</div>
+	</div>
+
 	<h2>The Append Function</h2>
 
 	<p>Append prepends an element to the front of a list:</p>
