@@ -1,2 +1,21 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Build/reports
 .reports/
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Local environment
+.env
+.env.local
