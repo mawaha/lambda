@@ -175,8 +175,11 @@ const Y = f => (x => f(v => x(x)(v)))(x => f(v => x(x)(v)))</code></pre>
 
 	<h3>Try It: Y-Combinator Calculator</h3>
 
-	<div class="warning-box">
-		<strong>Stack Limit:</strong> Like our recursive factorial, Y-combinator recursion in JavaScript is limited by stack depth. Values above 12 may overflow.
+	<p>Explore different recursive functions - all built using the same Y-combinator!</p>
+
+	<div class="info-box">
+		<strong>Available functions:</strong> factorial, sum, fibonacci, countdown<br>
+		<strong>Stack limit:</strong> Values above 12 may overflow (fibonacci limited to 10).
 	</div>
 
 	<div id="widget-y-combinator"></div>
@@ -711,15 +714,49 @@ const pipeline = compose(countLines, filterErrors, readFile)</code></pre>
 		// Y-combinator interactive widget
 		demo.registerWidget('widget-y-combinator', {
 			inputs: [
-				{ name: 'n', label: 'Calculate factorial of:', min: 0, max: 12, default: 5 }
+				{ name: 'fn', label: 'Function:', type: 'text', default: 'factorial' },
+				{ name: 'n', label: 'Input n:', min: 0, max: 12, default: 5 }
 			],
 			maxValue: 12,
-			compute: ({ n }) => {
-				const factorialMaker = recurse => x =>
-					x === 0 ? 1 : x * recurse(x - 1)
-				const factorial = Y(factorialMaker)
-				const result = factorial(n)
-				return `Y(factorialMaker)(${n}) = ${result}`
+			compute: ({ fn, n }) => {
+				const functions = {
+					factorial: {
+						maker: recurse => x => x === 0 ? 1 : x * recurse(x - 1),
+						desc: 'n! = n × (n-1) × ... × 1'
+					},
+					sum: {
+						maker: recurse => x => x === 0 ? 0 : x + recurse(x - 1),
+						desc: '1 + 2 + ... + n'
+					},
+					fibonacci: {
+						maker: recurse => x => x <= 1 ? x : recurse(x - 1) + recurse(x - 2),
+						desc: 'fib(n) = fib(n-1) + fib(n-2)'
+					},
+					countdown: {
+						maker: recurse => x => x === 0 ? 'done!' : `${x}...${recurse(x - 1)}`,
+						desc: 'n, n-1, ..., done!'
+					}
+				}
+
+				const key = fn.toLowerCase().trim()
+				const selected = functions[key]
+
+				if (!selected) {
+					return `Unknown function "${fn}". Try: factorial, sum, fibonacci, countdown`
+				}
+
+				// Limit fibonacci due to exponential complexity
+				if (key === 'fibonacci' && n > 10) {
+					return `Fibonacci limited to n ≤ 10 (exponential calls). Try a smaller number.`
+				}
+
+				const recursive = Y(selected.maker)
+				const result = recursive(n)
+				return {
+					'Function': key,
+					'Formula': selected.desc,
+					[`Y(${key}Maker)(${n})`]: result
+				}
 			}
 		})
 
