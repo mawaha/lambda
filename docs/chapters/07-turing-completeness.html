@@ -109,6 +109,308 @@
 		</div>
 	</div>
 
+	<h2>The Y-Combinator: Recursion Without Names</h2>
+
+	<p>In Chapter 6, we used JavaScript's ability to reference functions by name. But pure lambda calculus has <em>no names</em> - only anonymous functions. How can a function call itself if it can't reference itself?</p>
+
+	<h3>The Problem</h3>
+
+	<p>Consider factorial. In JavaScript we write:</p>
+
+	<pre><code>function factorial(n) {
+	return n === 0 ? 1 : n * factorial(n - 1)
+}  // ✓ Works - "factorial" is in scope</code></pre>
+
+	<p>But in pure lambda calculus, we only have anonymous functions:</p>
+
+	<pre><code>λn. if (n = 0) then 1 else n × ???(n - 1)
+                              ↑
+                     Can't reference myself!</code></pre>
+
+	<p>The function has no name to call. This is the fundamental problem the Y-combinator solves.</p>
+
+	<h3>The Solution: Fixed Points</h3>
+
+	<p>A <strong>fixed point</strong> of a function f is a value x where f(x) = x. For example, 0 is a fixed point of f(x) = x², because 0² = 0.</p>
+
+	<p>The Y-combinator finds <em>fixed points of functions that return functions</em>. For any function f:</p>
+
+	<div style="text-align: center; font-size: 1.3em; padding: 20px; background: #f0f7ff; border-radius: 8px; margin: 20px 0; border: 2px solid #2196F3;">
+		<strong>Y f = f (Y f)</strong>
+	</div>
+
+	<p>This is exactly what we need for recursion! If we define factorial-maker as a function that takes "itself" as an argument:</p>
+
+	<pre><code>// factorial-maker takes a "recursive-call" function
+const factorialMaker = recurse => n =>
+	n === 0 ? 1 : n * recurse(n - 1)
+
+// Y gives us the fixed point - a working factorial!
+const factorial = Y(factorialMaker)</code></pre>
+
+	<h3>The Definition</h3>
+
+	<p>The Y-combinator in pure lambda calculus:</p>
+
+	<div style="text-align: center; font-size: 1.2em; padding: 20px; background: #fff3e0; border-radius: 8px; margin: 20px 0; border: 2px solid #ff9800; font-family: 'Courier New', monospace;">
+		Y = λf.(λx.f(x x))(λx.f(x x))
+	</div>
+
+	<p>In JavaScript (with a lazy twist for strict evaluation):</p>
+
+	<pre><code>// Lazy Y-combinator (works in JavaScript's eager evaluation)
+const Y = f => (x => f(v => x(x)(v)))(x => f(v => x(x)(v)))</code></pre>
+
+	<p>The <code>v => x(x)(v)</code> wrapper delays the self-application, preventing infinite loops in JavaScript's strict evaluation.</p>
+
+	<h3>Step-by-Step: How Y Works</h3>
+
+	<div id="demo-y-combinator-reduction"></div>
+
+	<h3>Y-Combinator Factorial</h3>
+
+	<p>Let's see the Y-combinator compute factorial:</p>
+
+	<div id="demo-y-factorial"></div>
+
+	<h3>Try It: Y-Combinator Calculator</h3>
+
+	<div class="warning-box">
+		<strong>Stack Limit:</strong> Like our recursive factorial, Y-combinator recursion in JavaScript is limited by stack depth. Values above 12 may overflow.
+	</div>
+
+	<div id="widget-y-combinator"></div>
+
+	<h3>Comparison: Named vs Y-Combinator Recursion</h3>
+
+	<table>
+		<tr>
+			<th>Aspect</th>
+			<th>Named Recursion</th>
+			<th>Y-Combinator</th>
+		</tr>
+		<tr>
+			<td>Self-reference</td>
+			<td>Uses function name</td>
+			<td>Anonymous - no names needed</td>
+		</tr>
+		<tr>
+			<td>Language support</td>
+			<td>Requires named functions</td>
+			<td>Works in pure lambda calculus</td>
+		</tr>
+		<tr>
+			<td>Flexibility</td>
+			<td>Fixed behavior</td>
+			<td>Can be wrapped/modified</td>
+		</tr>
+		<tr>
+			<td>Debugging</td>
+			<td>Clear stack traces</td>
+			<td>Complex stack traces</td>
+		</tr>
+		<tr>
+			<td>Use in practice</td>
+			<td>Always (when available)</td>
+			<td>Theoretical interest, some FP patterns</td>
+		</tr>
+	</table>
+
+	<div class="info-box">
+		<strong>Why does Y matter?</strong> The Y-combinator proves that recursion is derivable from first principles. We don't need special language support - anonymous functions alone are enough for any recursive computation.
+	</div>
+
+	<h2>The Halting Problem</h2>
+
+	<p>With Turing completeness comes an uncomfortable truth: some questions about programs are <em>fundamentally unanswerable</em>.</p>
+
+	<h3>The Question</h3>
+
+	<p>Can we build a program <code>halts(program, input)</code> that tells us whether any given program will eventually finish or run forever?</p>
+
+	<pre><code>function halts(program, input) {
+	// Analyze the program...
+	// Return true if it halts, false if infinite loop
+	return ???  // Is this possible?
+}</code></pre>
+
+	<p>This would be incredibly useful! We could detect infinite loops before running code.</p>
+
+	<h3>The Proof: It's Impossible</h3>
+
+	<p>Alan Turing proved in 1936 that no such program can exist. Here's the clever contradiction:</p>
+
+	<div style="background: #fff8e1; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+		<p><strong>Step 1:</strong> Assume <code>halts(program, input)</code> exists.</p>
+		<p><strong>Step 2:</strong> Build a paradoxical program:</p>
+		<pre><code>function paradox(program) {
+	if (halts(program, program)) {
+		while (true) {}  // Loop forever if it "halts"
+	}
+	return  // Halt if it "loops forever"
+}</code></pre>
+		<p><strong>Step 3:</strong> Run <code>paradox(paradox)</code>:</p>
+		<ul>
+			<li>If <code>halts</code> says it halts → it loops forever (contradiction!)</li>
+			<li>If <code>halts</code> says it loops → it halts (contradiction!)</li>
+		</ul>
+		<p><strong>Conclusion:</strong> <code>halts</code> cannot exist.</p>
+	</div>
+
+	<h3>Connection to Y-Combinator</h3>
+
+	<p>The paradox function has the same self-referential structure as the Y-combinator! Both use a function that receives itself as input:</p>
+
+	<pre><code>// Y-combinator pattern:
+(x => f(x(x)))(x => f(x(x)))
+     ↑    ↑         ↑    ↑
+     Uses itself    Uses itself
+
+// Paradox pattern:
+paradox(paradox)
+   ↑       ↑
+   Calls itself with itself</code></pre>
+
+	<p>The Y-combinator harnesses self-reference for useful recursion. The halting paradox shows that unrestricted self-reference leads to undecidability.</p>
+
+	<h3>What This Means for Developers</h3>
+
+	<table>
+		<tr>
+			<th>Impossible</th>
+			<th>Possible Approximations</th>
+		</tr>
+		<tr>
+			<td>Perfect infinite loop detection</td>
+			<td>Timeouts, watchdogs</td>
+		</tr>
+		<tr>
+			<td>Perfect deadlock detection</td>
+			<td>Static analysis for common patterns</td>
+		</tr>
+		<tr>
+			<td>Perfect optimization</td>
+			<td>Heuristic optimizers</td>
+		</tr>
+		<tr>
+			<td>Prove all programs correct</td>
+			<td>Prove specific programs correct</td>
+		</tr>
+		<tr>
+			<td>Universal virus detector</td>
+			<td>Signature-based detection, heuristics</td>
+		</tr>
+	</table>
+
+	<div class="info-box">
+		<strong>Rice's Theorem:</strong> The halting problem is just one example. Any non-trivial property about program behavior is undecidable in general. This is why type systems, linters, and static analyzers are necessarily incomplete - they reject some valid programs or accept some invalid ones.
+	</div>
+
+	<h2>What Turing Complete Actually Means</h2>
+
+	<p>Now that we've proven lambda calculus is Turing complete, let's clear up some common misconceptions.</p>
+
+	<h3>Common Misconceptions</h3>
+
+	<table>
+		<tr>
+			<th>Misconception</th>
+			<th>Reality</th>
+		</tr>
+		<tr>
+			<td>"More features = more powerful"</td>
+			<td>A Turing complete language with 3 features computes the same things as one with 300</td>
+		</tr>
+		<tr>
+			<td>"Languages have different computational limits"</td>
+			<td>All Turing complete languages can compute exactly the same set of functions</td>
+		</tr>
+		<tr>
+			<td>"Assembly is more powerful than Python"</td>
+			<td>Both compute the same things; assembly controls <em>how</em>, not <em>what</em></td>
+		</tr>
+		<tr>
+			<td>"Turing complete = can do anything"</td>
+			<td>Can compute anything computable - but can't solve halting problem!</td>
+		</tr>
+		<tr>
+			<td>"Need loops for computation"</td>
+			<td>Recursion (or goto, or Y-combinator) works equally well</td>
+		</tr>
+	</table>
+
+	<h3>The Three Essentials</h3>
+
+	<p>A system is Turing complete with just:</p>
+
+	<div id="demo-minimal-requirements"></div>
+
+	<h3>Surprisingly Turing Complete</h3>
+
+	<p>You'd be amazed what's accidentally Turing complete:</p>
+
+	<ul>
+		<li><strong>SQL (with CTEs):</strong> Recursive queries make it Turing complete</li>
+		<li><strong>CSS + HTML:</strong> With Rule 110 patterns</li>
+		<li><strong>PowerPoint:</strong> Yes, really - using animations and hyperlinks</li>
+		<li><strong>Magic: The Gathering:</strong> The card game is Turing complete</li>
+		<li><strong>Minecraft redstone:</strong> People have built working computers</li>
+		<li><strong>Excel formulas:</strong> With LAMBDA function (added 2021)</li>
+		<li><strong>sendmail.cf:</strong> The mail config file</li>
+	</ul>
+
+	<h3>Intentionally NOT Turing Complete</h3>
+
+	<p>Some languages deliberately avoid Turing completeness for good reasons:</p>
+
+	<table>
+		<tr>
+			<th>Language/Format</th>
+			<th>Why Not Turing Complete</th>
+			<th>Benefit</th>
+		</tr>
+		<tr>
+			<td>JSON, YAML, TOML</td>
+			<td>Data only, no computation</td>
+			<td>Always terminates parsing</td>
+		</tr>
+		<tr>
+			<td>Regular expressions (true regex)</td>
+			<td>No unbounded memory</td>
+			<td>Guaranteed to finish matching</td>
+		</tr>
+		<tr>
+			<td>HTML (without JS)</td>
+			<td>Declarative only</td>
+			<td>Safe to render untrusted content</td>
+		</tr>
+		<tr>
+			<td>SQL (basic)</td>
+			<td>Originally just queries</td>
+			<td>Queries always terminate</td>
+		</tr>
+		<tr>
+			<td>Dhall</td>
+			<td>Configuration language</td>
+			<td>Evaluation always terminates</td>
+		</tr>
+		<tr>
+			<td>Total languages (Agda, Idris)</td>
+			<td>Require termination proofs</td>
+			<td>Programs provably halt</td>
+		</tr>
+	</table>
+
+	<div class="info-box">
+		<strong>Design insight:</strong> Sometimes you <em>don't</em> want Turing completeness. If your configuration language is Turing complete, a malicious config could loop forever. This is why JSON beat XML for data exchange - it's simpler and guaranteed to parse.
+	</div>
+
+	<h3>Test Your Understanding</h3>
+
+	<div id="widget-turing-quiz"></div>
+
+	<hr style="margin: 40px 0;">
+
 	<h3>✓ Data Storage</h3>
 
 	<p>We have data structures built from pure functions:</p>
@@ -340,8 +642,156 @@ const pipeline = compose(countLines, filterErrors, readFile)</code></pre>
 
 	<script type="module">
 		import { InteractiveDemo } from '../js/interactive.js'
+		import { Y } from '../lib/combinators.js'
 
 		const demo = new InteractiveDemo()
+
+		// Y-Combinator step-by-step reduction demo
+		demo.registerDemo('demo-y-combinator-reduction', () => {
+			return {
+				steps: [
+					{
+						label: 'Start with Y f',
+						expression: 'Y f',
+						explanation: 'We want to find the fixed point of f'
+					},
+					{
+						label: 'Expand Y definition',
+						expression: '(λx.f(x x))(λx.f(x x))',
+						explanation: 'Y = λf.(λx.f(x x))(λx.f(x x))',
+						highlight: 'λx.f(x x)'
+					},
+					{
+						label: 'Apply left λx to right λx',
+						expression: 'f((λx.f(x x))(λx.f(x x)))',
+						explanation: 'Substitute the right side for x in the left side'
+					},
+					{
+						label: 'Notice the pattern',
+						expression: 'f(Y f)',
+						explanation: 'The inner part is Y f again! So Y f = f(Y f)',
+						highlight: 'Y f'
+					},
+					{
+						label: 'The fixed point property',
+						expression: 'Y f = f(Y f) = f(f(Y f)) = f(f(f(...)))',
+						explanation: 'Y f equals f applied infinitely - perfect for recursion!'
+					}
+				]
+			}
+		})
+
+		// Y-combinator factorial demo
+		demo.registerDemo('demo-y-factorial', () => {
+			// Define factorial maker
+			const factorialMaker = recurse => n =>
+				n === 0 ? 1 : n * recurse(n - 1)
+
+			// Create factorial using Y-combinator
+			const factorial = Y(factorialMaker)
+
+			// Compute some examples
+			const examples = [0, 1, 2, 3, 4, 5].map(n => ({
+				input: n,
+				output: factorial(n)
+			}))
+
+			let html = `<strong>Y(factorialMaker) computes:</strong><br><br>`
+			html += `<code style="display: block; background: #f5f5f5; padding: 15px; border-radius: 4px;">`
+			html += `const factorialMaker = recurse => n =><br>`
+			html += `&nbsp;&nbsp;n === 0 ? 1 : n * recurse(n - 1)<br><br>`
+			html += `const factorial = Y(factorialMaker)</code><br><br>`
+			html += `<strong>Results:</strong><br>`
+			examples.forEach(({input, output}) => {
+				html += `factorial(${input}) = ${output}<br>`
+			})
+			return html
+		})
+
+		// Y-combinator interactive widget
+		demo.registerWidget('widget-y-combinator', {
+			inputs: [
+				{ name: 'n', label: 'Calculate factorial of:', min: 0, max: 12, default: 5 }
+			],
+			maxValue: 12,
+			compute: ({ n }) => {
+				const factorialMaker = recurse => x =>
+					x === 0 ? 1 : x * recurse(x - 1)
+				const factorial = Y(factorialMaker)
+				const result = factorial(n)
+				return `Y(factorialMaker)(${n}) = ${result}`
+			}
+		})
+
+		// Minimal requirements demo
+		demo.registerDemo('demo-minimal-requirements', () => {
+			return `
+				<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+					<div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border: 2px solid #2196F3;">
+						<div style="font-size: 24px; margin-bottom: 10px;">1</div>
+						<strong>Conditionals</strong><br>
+						<span style="font-size: 0.9em; color: #666;">if/then/else</span>
+					</div>
+					<div style="background: #e8f5e9; padding: 20px; border-radius: 8px; border: 2px solid #4CAF50;">
+						<div style="font-size: 24px; margin-bottom: 10px;">2</div>
+						<strong>Unbounded Memory</strong><br>
+						<span style="font-size: 0.9em; color: #666;">store arbitrary data</span>
+					</div>
+					<div style="background: #fff3e0; padding: 20px; border-radius: 8px; border: 2px solid #FF9800;">
+						<div style="font-size: 24px; margin-bottom: 10px;">3</div>
+						<strong>Unbounded Looping</strong><br>
+						<span style="font-size: 0.9em; color: #666;">recursion or iteration</span>
+					</div>
+				</div>
+				<p style="margin-top: 15px; text-align: center; color: #666; font-style: italic;">
+					With just these three capabilities, you can compute anything that's computable.
+				</p>
+			`
+		})
+
+		// Turing completeness quiz widget
+		demo.registerWidget('widget-turing-quiz', {
+			inputs: [
+				{
+					name: 'language',
+					label: 'Is this Turing complete?',
+					type: 'text',
+					default: 'JSON'
+				}
+			],
+			compute: ({ language }) => {
+				const turingComplete = {
+					'javascript': { complete: true, reason: 'Has loops, conditionals, and unbounded memory (heap)' },
+					'python': { complete: true, reason: 'General-purpose language with all requirements' },
+					'c': { complete: true, reason: 'Can allocate memory, loop, and branch' },
+					'haskell': { complete: true, reason: 'Recursion and lazy infinite structures' },
+					'sql': { complete: true, reason: 'With recursive CTEs (since SQL:1999)' },
+					'css': { complete: true, reason: 'Can simulate Rule 110 cellular automaton' },
+					'html': { complete: false, reason: 'Declarative markup only, no computation' },
+					'json': { complete: false, reason: 'Pure data format, no computation' },
+					'yaml': { complete: false, reason: 'Data serialization, no computation' },
+					'xml': { complete: false, reason: 'Markup only (XSLT is Turing complete though!)' },
+					'regex': { complete: false, reason: 'True regular expressions have no unbounded memory' },
+					'brainfuck': { complete: true, reason: 'Just 8 commands but Turing complete!' },
+					'lambda calculus': { complete: true, reason: "That's what this whole tutorial proved!" },
+					'excel': { complete: true, reason: 'LAMBDA function (2021) made it Turing complete' },
+					'powerpoint': { complete: true, reason: 'Hyperlinks + animations can simulate computation' },
+					'minecraft': { complete: true, reason: 'Redstone circuits can build computers' },
+					'typescript': { complete: true, reason: 'The type system alone is Turing complete!' },
+				}
+
+				const key = language.toLowerCase().trim()
+				const info = turingComplete[key]
+
+				if (info) {
+					const emoji = info.complete ? '✓' : '✗'
+					const color = info.complete ? '#4CAF50' : '#f44336'
+					return `<span style="color: ${color}; font-weight: bold;">${emoji} ${info.complete ? 'Yes' : 'No'}</span><br>${info.reason}`
+				} else {
+					return `I don't have info on "${language}". Try: JavaScript, Python, JSON, HTML, SQL, CSS, regex, Brainfuck, or Excel.`
+				}
+			}
+		})
 
 		// Demonstrate Turing completeness with a simple example
 		demo.registerDemo('demo-turing-complete', () => {
@@ -359,6 +809,7 @@ const pipeline = compose(countLines, filterErrors, readFile)</code></pre>
 		})
 
 		demo.runDemos()
+		demo.setupWidgets()
 	</script>
 </body>
 </html>
