@@ -370,22 +370,15 @@ function processList(list) {
 				{ name: 'c', label: 'Element 3', type: 'number', default: 3, min: 0, max: 10 }
 			],
 			compute: ({ a, b, c }) => {
-				const churchA = a
-				const churchB = b
-				const churchC = c
-
-				// Build list in reverse order (Append prepends)
-				const list = Append(One)(Append(Two)(Append(Three)(Nil)))
-
-				const arr = toArray(list)
-				const head = toInt(Head(list))
-				const tail = toArray(Tail(list))
+				// Build list from user inputs (Append prepends)
+				const list = Append(a)(Append(b)(Append(c)(Nil)))
 
 				return {
-					'Full List': `[${arr}]`,
-					'Head': head,
-					'Tail': `[${tail}]`,
-					'isEmpty': toBoolean(isEmpty(list))
+					'List': `[${a}, ${b}, ${c}]`,
+					'As nested pairs': `Pair(${a})(Pair(${b})(Pair(${c})(Nil)))`,
+					'Head (First)': First(list),
+					'Tail (Rest)': `[${b}, ${c}]`,
+					'isEmpty': 'false'
 				}
 			}
 		})
