@@ -490,6 +490,17 @@ const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
 			<li>What happens with Subtract(Two)(Five)?</li>
 			<li>What is toInt(Power(Two)(Three))?</li>
 		</ol>
+		<details style="margin-top: 15px;">
+			<summary style="cursor: pointer; color: #6c5ce7; font-weight: 600;">Show Solutions</summary>
+			<ol style="margin-top: 10px; background: #f8f9fa; padding: 15px 15px 15px 35px; border-radius: 4px;">
+				<li><strong>5</strong> — Add(Two)(Three) applies increment 2+3=5 times</li>
+				<li><strong>0</strong> — Anything multiplied by zero is zero (applying a function 0 times)</li>
+				<li><strong>13</strong> — Compose(add3)(mult2)(5) = add3(mult2(5)) = add3(10) = 13. Inner function runs first!</li>
+				<li><strong>Both apply f "m×n" times</strong> — Multiply(m)(n) applies a function m times, n times = m×n times total. Compose does the same: n applications of "apply m times"</li>
+				<li><strong>0</strong> — Church subtraction can't go negative. Subtract(Two)(Five) = decrement 2 five times, but it bottoms out at 0</li>
+				<li><strong>8</strong> — Power(Two)(Three) = 2³ = 8</li>
+			</ol>
+		</details>
 	</div>
 
 	<h2>Key Takeaways</h2>

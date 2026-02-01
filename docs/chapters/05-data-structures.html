@@ -261,6 +261,16 @@ function processList(list) {
 			<li>What happens when you call Head(Nil)?</li>
 			<li>Can you think of how to implement a Length function?</li>
 		</ol>
+		<details style="margin-top: 15px;">
+			<summary style="cursor: pointer; color: #6c5ce7; font-weight: 600;">Show Solutions</summary>
+			<ol style="margin-top: 10px; background: #f8f9fa; padding: 15px 15px 15px 35px; border-radius: 4px;">
+				<li><code>Cons(4)(Cons(5)(Cons(6)(Nil)))</code> — Build from right to left, innermost is last element</li>
+				<li><strong>2</strong> — Tail([1,2,3]) = [2,3], then Head([2,3]) = 2</li>
+				<li><strong>True</strong> — Nil is the empty list, so isEmpty returns True</li>
+				<li><strong>Undefined behavior</strong> — Head extracts from Nil's pair structure, returning False (the first element of Pair(False)(False)). This is why you should check isEmpty first!</li>
+				<li><code>Length = list => isEmpty(list) ? Zero : Increment(Length(Tail(list)))</code> — Recursively count: empty list = 0, otherwise 1 + length of tail</li>
+			</ol>
+		</details>
 	</div>
 
 	<h2>Why This Matters</h2>

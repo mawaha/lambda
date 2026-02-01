@@ -323,8 +323,18 @@ const Second = p => p(False)</code></pre>
 			<li>What does <code>Or(False)(False)</code> return?</li>
 			<li>What does <code>Not(Not(True))</code> return?</li>
 			<li>Can you write XOR using And, Or, and Not?</li>
-			<li>What does <code>Pair(10)(20)(And)</code> do?</li>
+			<li>What does <code>Pair(10)(20)(True)</code> return?</li>
 		</ol>
+		<details style="margin-top: 15px;">
+			<summary style="cursor: pointer; color: #6c5ce7; font-weight: 600;">Show Solutions</summary>
+			<ol style="margin-top: 10px; background: #f8f9fa; padding: 15px 15px 15px 35px; border-radius: 4px;">
+				<li><strong>True</strong> — Both inputs are True, so And returns True</li>
+				<li><strong>False</strong> — Both inputs are False, so Or returns False</li>
+				<li><strong>True</strong> — Not(True) = False, then Not(False) = True</li>
+				<li><code>XOR = a => b => And(Or(a)(b))(Not(And(a)(b)))</code> — XOR is true when exactly one input is true: (a OR b) AND NOT (a AND b)</li>
+				<li><strong>10</strong> — Pair stores two values; passing True selects the first: Pair(10)(20)(True) = True(10)(20) = 10</li>
+			</ol>
+		</details>
 	</div>
 
 	<h2>Why This Matters</h2>

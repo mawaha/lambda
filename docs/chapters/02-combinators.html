@@ -370,6 +370,15 @@ usersApi({ name: 'Bob' });  // POST to https://api.example.com/users</code></pre
 			<li>Can you explain why <code>M(Id)</code> returns Id?</li>
 			<li>What is the difference between <code>Id</code> and <code>K(x)</code>?</li>
 		</ol>
+		<details style="margin-top: 15px;">
+			<summary style="cursor: pointer; color: #6c5ce7; font-weight: 600;">Show Solutions</summary>
+			<ol style="margin-top: 10px; background: #f8f9fa; padding: 15px 15px 15px 35px; border-radius: 4px;">
+				<li><strong>Id</strong> — Id returns its argument unchanged, so Id(Id) = Id</li>
+				<li><strong>K</strong> — K returns its first argument ignoring the second: K(K)(Id) = K</li>
+				<li><strong>M(Id) = Id(Id) = Id</strong> — M applies its argument to itself, so M(Id) = Id(Id), and Id returns its argument, so Id(Id) = Id</li>
+				<li><strong>Id returns its argument; K(x) ignores its argument</strong> — Id(y) = y, but K(x)(y) = x regardless of y. K(x) is a "constant function" that always returns x.</li>
+			</ol>
+		</details>
 	</div>
 
 	<h2>Key Takeaways</h2>

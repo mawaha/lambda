@@ -271,6 +271,16 @@ If(condition)(() => expensive())(() => alsoExpensive())()</code></pre>
 			<li>How many function calls does Fibonacci(5) make?</li>
 			<li>What would happen without the base cases?</li>
 		</ol>
+		<details style="margin-top: 15px;">
+			<summary style="cursor: pointer; color: #6c5ce7; font-weight: 600;">Show Solutions</summary>
+			<ol style="margin-top: 10px; background: #f8f9fa; padding: 15px 15px 15px 35px; border-radius: 4px;">
+				<li><strong>6</strong> — 3! = 3 × 2 × 1 = 6</li>
+				<li><strong>3</strong> — fib(4) = fib(3) + fib(2) = 2 + 1 = 3. Sequence: 0, 1, 1, 2, 3...</li>
+				<li><strong>To prevent eager evaluation</strong> — JavaScript evaluates both If branches immediately. Without thunks, the recursive branch would execute even when hitting the base case, causing infinite recursion</li>
+				<li><strong>15 calls</strong> — Count the nodes in the call tree: fib(5) calls fib(4)+fib(3), fib(4) calls fib(3)+fib(2), etc. Many duplicate calculations!</li>
+				<li><strong>Infinite recursion → stack overflow</strong> — Without base cases, the function never stops calling itself. It would recurse forever (until JavaScript's stack limit crashes it)</li>
+			</ol>
+		</details>
 	</div>
 
 	<h2>Key Takeaways</h2>
