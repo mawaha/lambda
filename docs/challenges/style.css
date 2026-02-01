@@ -12,6 +12,12 @@ body {
 	min-height: 100vh;
 }
 
+/* Override nav for full-width layout */
+.nav {
+	margin: 0;
+	padding: 16px 24px;
+}
+
 /* Header */
 .challenge-header {
 	background: var(--bg);
