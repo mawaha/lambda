@@ -383,13 +383,59 @@ transform([1, 2, 3, 4, 5, 6, 7, 8]);</code></pre>
 
 	<h2>Subtraction (Advanced)</h2>
 
-	<p>Subtraction is trickier. We use a helper function called Phi that manipulates pairs:</p>
+	<p>Subtraction is trickier because Church numerals only know how to <em>apply</em> functions - they don't have a "go backwards" operation. The clever solution uses pairs to track "one step behind".</p>
+
+	<h3>The Phi Function</h3>
+
+	<p>Phi shifts a pair forward, keeping the old second value as the new first:</p>
 
 	<pre><code>const Phi = p => Pair(Second(p))(Increment(Second(p)))
+// Takes (a, b) and returns (b, b+1)</code></pre>
 
-const Decrement = n => First(n(Phi)(Pair(Zero)(Zero)))</code></pre>
+	<h3>How Decrement Works</h3>
 
-	<p>Decrement creates a pair starting at (0, 0) and shifts values n times, then takes the first element.</p>
+	<pre><code>const Decrement = n => First(n(Phi)(Pair(Zero)(Zero)))</code></pre>
+
+	<p>The insight: start with (0, 0) and apply Phi n times. The first element will always be "one behind" the second:</p>
+
+	<table>
+		<tr>
+			<th>Step</th>
+			<th>Pair State</th>
+			<th>First (result)</th>
+		</tr>
+		<tr>
+			<td>Start</td>
+			<td>(0, 0)</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Phi × 1</td>
+			<td>(0, 1)</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>Phi × 2</td>
+			<td>(1, 2)</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>Phi × 3</td>
+			<td>(2, 3)</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>Phi × n</td>
+			<td>(n-1, n)</td>
+			<td>n-1 ✓</td>
+		</tr>
+	</table>
+
+	<p>After n applications, taking the First element gives us n-1. This is how we decrement!</p>
+
+	<div class="info-box">
+		<strong>Why so complex?</strong> Church numerals are fundamentally about "doing something n times" - they only go forward. To go backward, we use this trick of tracking "one step behind" with pairs. It's inefficient (O(n) to decrement), but it works with pure functions!
+	</div>
 
 	<div id="demo-decrement"></div>
 
