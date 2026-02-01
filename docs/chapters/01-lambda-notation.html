@@ -184,173 +184,20 @@ const addTax = taxRate => price => price * (1 + taxRate);</code></pre>
 
 	<ul>
 		<li><strong>Testable:</strong> No setup needed, just call with inputs and check outputs</li>
-		<li><strong>No race conditions:</strong> Can't change shared state</li>
-		<li><strong>Memoizable:</strong> Same inputs always give same output, can cache safely</li>
-		<li><strong>Parallelizable:</strong> Safe to run in different threads/workers</li>
-		<li><strong>Redux reducers must be pure:</strong> Core requirement of Redux architecture</li>
+		<li><strong>Predictable:</strong> Same inputs always give same outputs</li>
+		<li><strong>No hidden dependencies:</strong> Everything the function needs is in its parameters</li>
 	</ul>
 
-	<pre data-lang="js"><code>// Redux reducer - must be pure!
-const counterReducer = (state = 0, action) => {
-	switch (action.type) {
-		case 'INCREMENT': return state + 1;
-		case 'DECREMENT': return state - 1;
-		default: return state;
-	}
-}</code></pre>
+	<pre data-lang="js"><code>// Pure - transforms input to output, no side effects
+const double = x => x * 2
+const numbers = [1, 2, 3].map(double)  // [2, 4, 6]
+
+// Also pure - all dependencies are parameters
+const multiply = x => y => x * y
+const triple = multiply(3)
+triple(4)  // 12</code></pre>
 
 	<p>Lambda calculus forces purity - you literally can't write impure functions because there's no concept of external state to access!</p>
-
-	<h2>Referential Transparency</h2>
-
-	<p>Pure functions have a powerful property called <strong>referential transparency</strong>: you can replace any function call with its result without changing the program's behavior. This is the foundation of equational reasoning about code.</p>
-
-	<h3>What is Referential Transparency?</h3>
-
-	<p>An expression is referentially transparent if you can substitute it with its value anywhere in your program and get the same result:</p>
-
-	<pre data-lang="js"><code>// Referentially transparent
-const add = x => y => x + y;
-const result = add(2)(3);  // Always evaluates to 5
-
-// Anywhere you see add(2)(3), you can replace it with 5:
-const a = add(2)(3) + 10;   // 15
-const b = 5 + 10;            // 15 - same result!
-
-// NOT referentially transparent
-let counter = 0;
-const increment = () => ++counter;
-
-increment();  // Returns 1
-increment();  // Returns 2 - same call, different result!
-// Can't replace increment() with a value - result changes each time</code></pre>
-
-	<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
-		<div style="background: white; padding: 30px; border-radius: 8px; border: 3px solid #28a745;">
-			<h4 style="margin: 0 0 20px 0; color: #155724; display: flex; align-items: center; gap: 10px;">
-				<span style="font-size: 24px;">✓</span> Referentially Transparent
-			</h4>
-			<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; margin: 15px 0;">
-const add = x => y => x + y;<br/>
-const result = add(2)(3);
-			</div>
-			<div style="background: #d4edda; padding: 20px; border-radius: 4px; border: 2px dashed #28a745; margin-top: 15px;">
-				<div style="font-weight: 600; margin-bottom: 10px; color: #155724;">Can substitute with value:</div>
-				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
-					add(2)(3) + 10 <span style="color: #6c5ce7; font-weight: bold;">=</span> 5 + 10
-				</div>
-				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
-					add(2)(3) * 2 <span style="color: #6c5ce7; font-weight: bold;">=</span> 5 * 2
-				</div>
-				<div style="font-style: italic; margin-top: 10px; font-size: 12px; color: #155724;">
-					Same call always returns same value
-				</div>
-			</div>
-		</div>
-
-		<div style="background: white; padding: 30px; border-radius: 8px; border: 3px solid #dc3545;">
-			<h4 style="margin: 0 0 20px 0; color: #721c24; display: flex; align-items: center; gap: 10px;">
-				<span style="font-size: 24px;">✗</span> NOT Referentially Transparent
-			</h4>
-			<div style="background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; margin: 15px 0;">
-let count = 0;<br/>
-const inc = () => ++count;
-			</div>
-			<div style="background: #f8d7da; padding: 20px; border-radius: 4px; border: 2px dashed #dc3545; margin-top: 15px;">
-				<div style="font-weight: 600; margin-bottom: 10px; color: #721c24;">Cannot substitute with value:</div>
-				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
-					inc() <span style="color: #6c5ce7; font-weight: bold;">→</span> 1
-				</div>
-				<div style="font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0;">
-					inc() <span style="color: #6c5ce7; font-weight: bold;">→</span> 2
-				</div>
-				<div style="font-style: italic; margin-top: 10px; font-size: 12px; color: #721c24;">
-					Same call returns different values!
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<details style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0;">
-	<summary style="cursor: pointer; font-weight: 600; color: #6c5ce7;">Deep Dive: Referential Transparency in Practice (click to expand)</summary>
-
-	<h3 style="margin-top: 20px;">Why It Matters in JavaScript</h3>
-
-	<p>Referential transparency enables powerful optimizations and reasoning:</p>
-
-	<pre><code>// React memoization - only works with referentially transparent components
-const MemoizedComponent = React.memo(Component);
-// React can safely cache: same props = same output, always
-
-// Reselect (Redux) - memoized selectors
-const getVisibleTodos = createSelector(
-	[getTodos, getFilter],
-	(todos, filter) => todos.filter(filter)
-);
-// Safe to cache because same inputs always give same output
-
-// Safe refactoring - can inline or extract
-const price = product.price * 1.2;
-// Can replace all uses of 'price' with (product.price * 1.2)
-
-// Parallel execution
-const results = await Promise.all([
-	fetchUser(1),
-	fetchUser(2),
-	fetchUser(3)
-]);
-// Safe because fetchUser(1) always returns the same user
-
-// Compiler optimizations
-const x = expensive(5);
-const y = expensive(5);
-// Compiler can optimize to:
-const x = expensive(5);
-const y = x;  // Reuse result!</code></pre>
-
-	<h3>Testing Benefits</h3>
-
-	<pre><code>// Referentially transparent = easy to test
-test('add function', () => {
-	expect(add(2)(3)).toBe(5);
-	expect(add(2)(3)).toBe(5);  // Same test, will always pass
-});
-
-// NOT referentially transparent = hard to test
-test('increment function', () => {
-	counter = 0;  // Need to reset state!
-	expect(increment()).toBe(1);
-	counter = 0;  // Reset again...
-	expect(increment()).toBe(1);
-});</code></pre>
-
-	<div class="info-box">
-		<strong>Referential transparency = pure function + deterministic output</strong><br>
-		No side effects, no mutations, same input always gives same output. This is why functional programming emphasizes purity - it makes code predictable and composable.
-	</div>
-
-	<h3>Breaking Referential Transparency</h3>
-
-	<p>These common patterns break referential transparency:</p>
-
-	<pre><code>// Reading external state
-const getDiscountedPrice = price => price * (1 - globalDiscount);
-
-// Modifying external state
-const addToCart = item => { cart.push(item); return cart.length; }
-
-// I/O operations (inherently impure)
-const readFile = path => fs.readFileSync(path);  // File might change
-const fetchData = url => fetch(url);              // Network might change
-
-// Non-deterministic operations
-Math.random()         // Different every time
-Date.now()            // Different every time
-user.input()          // Depends on user action</code></pre>
-
-	<p>In pure lambda calculus, all expressions are referentially transparent. In JavaScript, we choose when to break this for pragmatic reasons (I/O, randomness), but we isolate these effects to maintain reasoning about most of our code.</p>
-
-	</details>
 
 	<h2>Beta Reduction: Evaluation</h2>
 
