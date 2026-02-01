@@ -12,6 +12,539 @@
 		<div class="loading">Loading challenges...</div>
 	</div>
 
-	<script type="module" src="app.js"></script>
+	<script>
+	// ============================================
+	// Challenge Data
+	// ============================================
+
+	const prelude = {
+		I: x => x,
+		K: x => _ => x,
+		M: f => f(f),
+		Y: f => (x => f(v => x(x)(v)))(x => f(v => x(x)(v))),
+		TRUE: x => y => x,
+		FALSE: x => y => y,
+		ZERO: f => x => x,
+		ONE: f => x => f(x),
+		TWO: f => x => f(f(x)),
+		THREE: f => x => f(f(f(x))),
+		SUCC: n => f => x => f(n(f)(x)),
+		PAIR: a => b => f => f(a)(b),
+		toInt: n => n(x => x + 1)(0),
+		toChurch: n => {
+			if (n === 0) return f => x => x
+			return f => x => {
+				let result = x
+				for (let i = 0; i < n; i++) result = f(result)
+				return result
+			}
+		},
+		toBool: b => b(true)(false),
+	}
+
+	const challenges = [
+		{
+			id: 'identity', chapter: 1, title: 'The Identity Function', difficulty: 'beginner',
+			description: 'Create the Identity function - it should return its argument unchanged.',
+			concepts: ['The simplest possible function', 'In lambda notation: λx.x'],
+			hint: 'A function that just returns what it receives.',
+			starterCode: 'const I = ', solution: 'const I = x => x', exportName: 'I',
+			tests: [
+				{ args: [5], expected: 5, description: 'I(5) returns 5' },
+				{ args: ['hello'], expected: 'hello', description: 'I("hello") returns "hello"' },
+				{ args: [null], expected: null, description: 'I(null) returns null' },
+				{ custom: 'I(I) === I', description: 'I(I) returns I itself' },
+			],
+		},
+		{
+			id: 'constant', chapter: 2, title: 'The Constant Combinator (K)', difficulty: 'beginner',
+			description: 'Create the K combinator - it takes two arguments and always returns the first.',
+			concepts: ['Curried function (returns a function)', 'Ignores the second argument', 'In lambda notation: λx.λy.x'],
+			hint: 'Return a function that ignores its argument and returns the original value.',
+			starterCode: 'const K = ', solution: 'const K = x => y => x', exportName: 'K',
+			tests: [
+				{ args: [5, 10], expected: 5, description: 'K(5)(10) returns 5' },
+				{ args: ['first', 'second'], expected: 'first', description: 'K("first")("second") returns "first"' },
+				{ args: [true, false], expected: true, description: 'K(true)(false) returns true' },
+			],
+		},
+		{
+			id: 'kite', chapter: 2, title: 'The Kite Combinator (KI)', difficulty: 'beginner',
+			description: 'Create the Kite combinator - it takes two arguments and always returns the second.',
+			concepts: ['Opposite of K', 'Can be derived as K(I)', 'In lambda notation: λx.λy.y'],
+			hint: 'The first argument is ignored completely.',
+			starterCode: 'const KI = ', solution: 'const KI = x => y => y', exportName: 'KI',
+			tests: [
+				{ args: [5, 10], expected: 10, description: 'KI(5)(10) returns 10' },
+				{ args: ['first', 'second'], expected: 'second', description: 'KI("first")("second") returns "second"' },
+			],
+		},
+		{
+			id: 'self-apply', chapter: 2, title: 'Self-Application (M)', difficulty: 'intermediate',
+			description: 'Create the M combinator (Mockingbird) - it applies a function to itself.',
+			concepts: ['Self-application is key to recursion', 'In lambda notation: λf.ff', 'Warning: M(M) causes infinite loop!'],
+			hint: 'Take a function and call it with itself as the argument.',
+			starterCode: 'const M = ', solution: 'const M = f => f(f)', exportName: 'M',
+			tests: [
+				{ custom: 'M(I) === I', description: 'M(I) returns I' },
+				{ custom: 'M(K)(5) === K', description: 'M(K)(5) returns K' },
+			],
+		},
+		{
+			id: 'true', chapter: 3, title: 'Church TRUE', difficulty: 'beginner',
+			description: 'Create the Church encoding of TRUE - a function that selects its first argument.',
+			concepts: ['Booleans are selector functions', 'TRUE picks the first option', 'In lambda notation: λx.λy.x'],
+			hint: 'TRUE is actually the same as K!',
+			starterCode: 'const TRUE = ', solution: 'const TRUE = x => y => x', exportName: 'TRUE',
+			tests: [
+				{ args: ['yes', 'no'], expected: 'yes', description: 'TRUE("yes")("no") returns "yes"' },
+				{ args: [1, 2], expected: 1, description: 'TRUE(1)(2) returns 1' },
+			],
+		},
+		{
+			id: 'false', chapter: 3, title: 'Church FALSE', difficulty: 'beginner',
+			description: 'Create the Church encoding of FALSE - a function that selects its second argument.',
+			concepts: ['FALSE picks the second option', 'In lambda notation: λx.λy.y'],
+			hint: 'FALSE is actually the same as KI!',
+			starterCode: 'const FALSE = ', solution: 'const FALSE = x => y => y', exportName: 'FALSE',
+			tests: [
+				{ args: ['yes', 'no'], expected: 'no', description: 'FALSE("yes")("no") returns "no"' },
+				{ args: [1, 2], expected: 2, description: 'FALSE(1)(2) returns 2' },
+			],
+		},
+		{
+			id: 'not', chapter: 3, title: 'Logical NOT', difficulty: 'intermediate',
+			description: 'Create the NOT function - it flips TRUE to FALSE and FALSE to TRUE.',
+			concepts: ['Swap the arguments to the boolean', 'In lambda notation: λb.λx.λy.byx'],
+			hint: 'A Church boolean selects between two options. NOT should swap which one gets selected.',
+			given: ['TRUE = x => y => x', 'FALSE = x => y => y'],
+			starterCode: 'const NOT = ', solution: 'const NOT = b => x => y => b(y)(x)', exportName: 'NOT',
+			tests: [
+				{ customSetup: 'const result = NOT(TRUE)', custom: 'toBool(result) === false', description: 'NOT(TRUE) returns FALSE' },
+				{ customSetup: 'const result = NOT(FALSE)', custom: 'toBool(result) === true', description: 'NOT(FALSE) returns TRUE' },
+				{ customSetup: 'const result = NOT(NOT(TRUE))', custom: 'toBool(result) === true', description: 'NOT(NOT(TRUE)) returns TRUE' },
+			],
+		},
+		{
+			id: 'and', chapter: 3, title: 'Logical AND', difficulty: 'intermediate',
+			description: 'Create the AND function - returns TRUE only if both arguments are TRUE.',
+			concepts: ['If first is TRUE, result depends on second', 'If first is FALSE, result is FALSE', 'In lambda notation: λx.λy.xyx'],
+			hint: 'Use the first boolean to choose: if TRUE, return the second; if FALSE, return FALSE (which is the first).',
+			given: ['TRUE = x => y => x', 'FALSE = x => y => y'],
+			starterCode: 'const AND = ', solution: 'const AND = x => y => x(y)(x)', exportName: 'AND',
+			tests: [
+				{ customSetup: 'const result = AND(TRUE)(TRUE)', custom: 'toBool(result) === true', description: 'AND(TRUE)(TRUE) returns TRUE' },
+				{ customSetup: 'const result = AND(TRUE)(FALSE)', custom: 'toBool(result) === false', description: 'AND(TRUE)(FALSE) returns FALSE' },
+				{ customSetup: 'const result = AND(FALSE)(TRUE)', custom: 'toBool(result) === false', description: 'AND(FALSE)(TRUE) returns FALSE' },
+				{ customSetup: 'const result = AND(FALSE)(FALSE)', custom: 'toBool(result) === false', description: 'AND(FALSE)(FALSE) returns FALSE' },
+			],
+		},
+		{
+			id: 'or', chapter: 3, title: 'Logical OR', difficulty: 'intermediate',
+			description: 'Create the OR function - returns TRUE if either argument is TRUE.',
+			concepts: ['If first is TRUE, result is TRUE', 'If first is FALSE, result depends on second', 'In lambda notation: λx.λy.xxy'],
+			hint: 'Use the first boolean to choose: if TRUE, return TRUE (which is the first); if FALSE, return the second.',
+			given: ['TRUE = x => y => x', 'FALSE = x => y => y'],
+			starterCode: 'const OR = ', solution: 'const OR = x => y => x(x)(y)', exportName: 'OR',
+			tests: [
+				{ customSetup: 'const result = OR(TRUE)(TRUE)', custom: 'toBool(result) === true', description: 'OR(TRUE)(TRUE) returns TRUE' },
+				{ customSetup: 'const result = OR(TRUE)(FALSE)', custom: 'toBool(result) === true', description: 'OR(TRUE)(FALSE) returns TRUE' },
+				{ customSetup: 'const result = OR(FALSE)(TRUE)', custom: 'toBool(result) === true', description: 'OR(FALSE)(TRUE) returns TRUE' },
+				{ customSetup: 'const result = OR(FALSE)(FALSE)', custom: 'toBool(result) === false', description: 'OR(FALSE)(FALSE) returns FALSE' },
+			],
+		},
+		{
+			id: 'zero', chapter: 4, title: 'Church ZERO', difficulty: 'beginner',
+			description: 'Create the Church encoding of ZERO - apply a function zero times.',
+			concepts: ['Numbers are "how many times to apply a function"', 'ZERO applies f zero times (just returns x)', 'In lambda notation: λf.λx.x'],
+			hint: 'ZERO is the same as FALSE - it ignores f and returns x.',
+			starterCode: 'const ZERO = ', solution: 'const ZERO = f => x => x', exportName: 'ZERO',
+			tests: [
+				{ custom: 'toInt(ZERO) === 0', description: 'ZERO converts to 0' },
+				{ custom: 'ZERO(x => x + 1)(0) === 0', description: 'ZERO(increment)(0) returns 0' },
+			],
+		},
+		{
+			id: 'succ', chapter: 4, title: 'Successor Function', difficulty: 'intermediate',
+			description: 'Create SUCC - given a Church numeral n, return n+1.',
+			concepts: ['Add one more application of f', 'In lambda notation: λn.λf.λx.f(nfx)'],
+			hint: 'Apply f one more time to what n(f)(x) produces.',
+			given: ['ZERO = f => x => x', 'ONE = f => x => f(x)'],
+			starterCode: 'const SUCC = ', solution: 'const SUCC = n => f => x => f(n(f)(x))', exportName: 'SUCC',
+			tests: [
+				{ custom: 'toInt(SUCC(ZERO)) === 1', description: 'SUCC(ZERO) equals ONE' },
+				{ custom: 'toInt(SUCC(ONE)) === 2', description: 'SUCC(ONE) equals TWO' },
+				{ custom: 'toInt(SUCC(SUCC(SUCC(ZERO)))) === 3', description: 'SUCC(SUCC(SUCC(ZERO))) equals THREE' },
+			],
+		},
+		{
+			id: 'add', chapter: 4, title: 'Addition', difficulty: 'intermediate',
+			description: 'Create ADD - add two Church numerals together.',
+			concepts: ['Apply SUCC n times to m', 'In lambda notation: λn.λm.n(SUCC)(m)'],
+			hint: 'Use n to apply SUCC repeatedly to m.',
+			given: ['SUCC = n => f => x => f(n(f)(x))'],
+			starterCode: 'const ADD = ', solution: 'const ADD = n => m => n(SUCC)(m)', exportName: 'ADD',
+			tests: [
+				{ custom: 'toInt(ADD(ONE)(TWO)) === 3', description: 'ADD(ONE)(TWO) equals THREE' },
+				{ custom: 'toInt(ADD(ZERO)(THREE)) === 3', description: 'ADD(ZERO)(THREE) equals THREE' },
+				{ custom: 'toInt(ADD(TWO)(TWO)) === 4', description: 'ADD(TWO)(TWO) equals FOUR' },
+			],
+		},
+		{
+			id: 'mult', chapter: 4, title: 'Multiplication', difficulty: 'advanced',
+			description: 'Create MULT - multiply two Church numerals.',
+			concepts: ['Composition of numerals', 'Apply f (n*m) times', 'In lambda notation: λn.λm.λf.n(mf)'],
+			hint: 'n(m(f)) applies f m times, n times.',
+			given: ['TWO = f => x => f(f(x))', 'THREE = f => x => f(f(f(x)))'],
+			starterCode: 'const MULT = ', solution: 'const MULT = n => m => f => n(m(f))', exportName: 'MULT',
+			tests: [
+				{ custom: 'toInt(MULT(TWO)(THREE)) === 6', description: 'MULT(TWO)(THREE) equals SIX' },
+				{ custom: 'toInt(MULT(ONE)(THREE)) === 3', description: 'MULT(ONE)(THREE) equals THREE' },
+				{ custom: 'toInt(MULT(ZERO)(THREE)) === 0', description: 'MULT(ZERO)(THREE) equals ZERO' },
+			],
+		},
+		{
+			id: 'pair', chapter: 5, title: 'PAIR Constructor', difficulty: 'intermediate',
+			description: 'Create PAIR - a data structure that holds two values.',
+			concepts: ['Pairs store data as a closure', 'Takes a selector function to retrieve values', 'In lambda notation: λa.λb.λf.fab'],
+			hint: 'Store a and b by returning a function that applies a selector to them.',
+			starterCode: 'const PAIR = ', solution: 'const PAIR = a => b => f => f(a)(b)', exportName: 'PAIR',
+			tests: [
+				{ custom: 'PAIR(1)(2)(TRUE) === 1', description: 'PAIR(1)(2)(TRUE) returns 1 (first)' },
+				{ custom: 'PAIR(1)(2)(FALSE) === 2', description: 'PAIR(1)(2)(FALSE) returns 2 (second)' },
+				{ custom: 'PAIR("a")("b")(TRUE) === "a"', description: 'PAIR("a")("b")(TRUE) returns "a"' },
+			],
+		},
+		{
+			id: 'fst', chapter: 5, title: 'FST (First)', difficulty: 'beginner',
+			description: 'Create FST - extract the first element from a pair.',
+			concepts: ['Use TRUE as the selector', 'In lambda notation: λp.p(TRUE)'],
+			hint: 'Pass TRUE to the pair - it will select the first element.',
+			given: ['PAIR = a => b => f => f(a)(b)', 'TRUE = x => y => x'],
+			starterCode: 'const FST = ', solution: 'const FST = p => p(TRUE)', exportName: 'FST',
+			tests: [
+				{ customSetup: 'const p = PAIR(1)(2)', custom: 'FST(p) === 1', description: 'FST(PAIR(1)(2)) returns 1' },
+				{ customSetup: 'const p = PAIR("hello")("world")', custom: 'FST(p) === "hello"', description: 'FST(PAIR("hello")("world")) returns "hello"' },
+			],
+		},
+		{
+			id: 'snd', chapter: 5, title: 'SND (Second)', difficulty: 'beginner',
+			description: 'Create SND - extract the second element from a pair.',
+			concepts: ['Use FALSE as the selector', 'In lambda notation: λp.p(FALSE)'],
+			hint: 'Pass FALSE to the pair - it will select the second element.',
+			given: ['PAIR = a => b => f => f(a)(b)', 'FALSE = x => y => y'],
+			starterCode: 'const SND = ', solution: 'const SND = p => p(FALSE)', exportName: 'SND',
+			tests: [
+				{ customSetup: 'const p = PAIR(1)(2)', custom: 'SND(p) === 2', description: 'SND(PAIR(1)(2)) returns 2' },
+				{ customSetup: 'const p = PAIR("hello")("world")', custom: 'SND(p) === "world"', description: 'SND(PAIR("hello")("world")) returns "world"' },
+			],
+		},
+		{
+			id: 'iszero', chapter: 6, title: 'ISZERO Predicate', difficulty: 'intermediate',
+			description: 'Create ISZERO - returns TRUE if the numeral is ZERO, FALSE otherwise.',
+			concepts: ['Key for recursive base cases', 'ZERO applies f zero times, so we can detect it', 'In lambda notation: λn.n(K(FALSE))(TRUE)'],
+			hint: 'If n is ZERO, f is never applied, so start with TRUE. Any application of f should give FALSE.',
+			given: ['TRUE = x => y => x', 'FALSE = x => y => y', 'K = x => y => x'],
+			starterCode: 'const ISZERO = ', solution: 'const ISZERO = n => n(K(FALSE))(TRUE)', exportName: 'ISZERO',
+			tests: [
+				{ customSetup: 'const result = ISZERO(ZERO)', custom: 'toBool(result) === true', description: 'ISZERO(ZERO) returns TRUE' },
+				{ customSetup: 'const result = ISZERO(ONE)', custom: 'toBool(result) === false', description: 'ISZERO(ONE) returns FALSE' },
+				{ customSetup: 'const result = ISZERO(THREE)', custom: 'toBool(result) === false', description: 'ISZERO(THREE) returns FALSE' },
+			],
+		},
+		{
+			id: 'factorial-y', chapter: 6, title: 'Factorial with Y-Combinator', difficulty: 'advanced',
+			description: 'Create the factorial step function to use with Y-combinator.',
+			concepts: ['Y enables recursion without self-reference', 'Write a function that takes "recurse" as first argument', 'The Y combinator handles the self-application'],
+			hint: 'Write: recurse => n => (base case) ? 1 : n * recurse(n-1). Use JavaScript numbers for simplicity.',
+			given: ['Y = f => (x => f(v => x(x)(v)))(x => f(v => x(x)(v)))'],
+			starterCode: '// Complete the step function\nconst factorialStep = ',
+			solution: 'const factorialStep = recurse => n => n === 0 ? 1 : n * recurse(n - 1)',
+			exportName: 'factorialStep',
+			tests: [
+				{ custom: 'Y(factorialStep)(0) === 1', description: 'Y(factorialStep)(0) returns 1' },
+				{ custom: 'Y(factorialStep)(1) === 1', description: 'Y(factorialStep)(1) returns 1' },
+				{ custom: 'Y(factorialStep)(5) === 120', description: 'Y(factorialStep)(5) returns 120' },
+				{ custom: 'Y(factorialStep)(6) === 720', description: 'Y(factorialStep)(6) returns 720' },
+			],
+		},
+	]
+
+	const chapters = [
+		{ num: 1, title: 'Lambda Notation', path: '../chapters/01-lambda-notation.html' },
+		{ num: 2, title: 'Combinators', path: '../chapters/02-combinators.html' },
+		{ num: 3, title: 'Church Encodings', path: '../chapters/03-church-encodings.html' },
+		{ num: 4, title: 'Numerals', path: '../chapters/04-numerals.html' },
+		{ num: 5, title: 'Data Structures', path: '../chapters/05-data-structures.html' },
+		{ num: 6, title: 'Recursion', path: '../chapters/06-recursion.html' },
+		{ num: 7, title: 'Turing Completeness', path: '../chapters/07-turing-completeness.html' },
+	]
+
+	// ============================================
+	// Application Logic
+	// ============================================
+
+	let currentChallenge = null
+	let editor = null
+	let completedChallenges = new Set(JSON.parse(localStorage.getItem('lambda-challenges-completed') || '[]'))
+
+	function init() {
+		window.addEventListener('hashchange', handleRoute)
+		handleRoute()
+	}
+
+	function handleRoute() {
+		const hash = window.location.hash.slice(1)
+		if (!hash) {
+			renderChallengeList()
+		} else {
+			const challenge = challenges.find(c => c.id === hash)
+			if (challenge) {
+				renderChallenge(challenge)
+			} else {
+				renderChallengeList()
+			}
+		}
+	}
+
+	function renderChallengeList() {
+		currentChallenge = null
+		const app = document.getElementById('app')
+		const challengesByChapter = {}
+		challenges.forEach(c => {
+			if (!challengesByChapter[c.chapter]) challengesByChapter[c.chapter] = []
+			challengesByChapter[c.chapter].push(c)
+		})
+
+		app.innerHTML = `
+			<header class="challenge-header">
+				<h1><a href="#">Lambda Challenges</a></h1>
+				<div class="header-controls">
+					<span class="progress-badge">${completedChallenges.size}/${challenges.length} completed</span>
+				</div>
+			</header>
+			<div class="challenge-list">
+				<h1>Lambda Calculus Challenges</h1>
+				<p class="subtitle">Practice implementing lambda calculus concepts in JavaScript</p>
+				${Object.entries(challengesByChapter).map(([chapterNum, chapterChallenges]) => {
+					const chapter = chapters.find(c => c.num === parseInt(chapterNum))
+					return `
+						<section class="chapter-section">
+							<h2>Chapter ${chapterNum}: ${chapter?.title || ''}</h2>
+							${chapterChallenges.map(c => `
+								<a href="#${c.id}" class="challenge-card ${completedChallenges.has(c.id) ? 'completed' : ''}">
+									<div class="challenge-card-info">
+										<span class="challenge-card-status">${completedChallenges.has(c.id) ? '&#10003;' : '&#9675;'}</span>
+										<span class="challenge-card-title">${c.title}</span>
+									</div>
+									<span class="difficulty-badge ${c.difficulty}">${c.difficulty}</span>
+								</a>
+							`).join('')}
+						</section>
+					`
+				}).join('')}
+			</div>
+		`
+	}
+
+	function renderChallenge(challenge) {
+		currentChallenge = challenge
+		const app = document.getElementById('app')
+		const chapterInfo = chapters.find(c => c.num === challenge.chapter)
+		const challengeIndex = challenges.findIndex(c => c.id === challenge.id)
+		const prevChallenge = challengeIndex > 0 ? challenges[challengeIndex - 1] : null
+		const nextChallenge = challengeIndex < challenges.length - 1 ? challenges[challengeIndex + 1] : null
+
+		app.innerHTML = `
+			<header class="challenge-header">
+				<h1><a href="#">Lambda Challenges</a></h1>
+				<div class="header-controls">
+					<select class="chapter-select" id="chapter-select">
+						<option value="">All Chapters</option>
+						${chapters.map(ch => `
+							<option value="${ch.num}" ${ch.num === challenge.chapter ? 'selected' : ''}>
+								Chapter ${ch.num}: ${ch.title}
+							</option>
+						`).join('')}
+					</select>
+					<span class="progress-badge">${completedChallenges.size}/${challenges.length}</span>
+				</div>
+			</header>
+			<div class="challenge-container">
+				<aside class="challenge-sidebar">
+					<h2 class="challenge-title">${challenge.title}</h2>
+					<div class="challenge-meta">
+						<span class="difficulty-badge ${challenge.difficulty}">${challenge.difficulty}</span>
+						<span class="chapter-badge">Chapter ${challenge.chapter}</span>
+					</div>
+					<p class="challenge-description">${challenge.description}</p>
+					${challenge.concepts ? `
+						<div class="challenge-concepts">
+							<h3>Key Concepts</h3>
+							<ul>${challenge.concepts.map(c => `<li>${c}</li>`).join('')}</ul>
+						</div>
+					` : ''}
+					${challenge.given ? `
+						<div class="challenge-given">
+							<h3>Given</h3>
+							${challenge.given.map(g => `<code>${g}</code>`).join('')}
+						</div>
+					` : ''}
+					<div class="sidebar-actions">
+						<button class="hint-btn" id="hint-btn">Show Hint</button>
+						<button class="solution-btn" id="solution-btn">Show Solution</button>
+					</div>
+					<div class="hint-content" id="hint-content"><strong>Hint:</strong> ${challenge.hint}</div>
+					<div class="solution-content" id="solution-content"><strong>Solution:</strong><code>${challenge.solution}</code></div>
+					${chapterInfo ? `<a href="${chapterInfo.path}" class="chapter-link">&#8592; Back to ${chapterInfo.title}</a>` : ''}
+				</aside>
+				<main class="editor-panel">
+					<div class="editor-toolbar">
+						<button class="run-btn" id="run-btn">Run Tests</button>
+						<div class="nav-buttons">
+							${prevChallenge ? `<a href="#${prevChallenge.id}" class="nav-btn">&#8592; Previous</a>` : `<button class="nav-btn" disabled>&#8592; Previous</button>`}
+							${nextChallenge ? `<a href="#${nextChallenge.id}" class="nav-btn">Next &#8594;</a>` : `<button class="nav-btn" disabled>Next &#8594;</button>`}
+						</div>
+					</div>
+					<div class="editor-container" id="editor-container"></div>
+					<div class="test-results" id="test-results">
+						<h3>Test Results</h3>
+						${challenge.tests.map(t => `
+							<div class="test-item">
+								<span class="test-icon pending">&#9675;</span>
+								<span class="test-description">${t.description}</span>
+							</div>
+						`).join('')}
+					</div>
+				</main>
+			</div>
+		`
+
+		document.getElementById('hint-btn').addEventListener('click', () => {
+			document.getElementById('hint-content').classList.toggle('visible')
+		})
+		document.getElementById('solution-btn').addEventListener('click', () => {
+			document.getElementById('solution-content').classList.toggle('visible')
+		})
+		document.getElementById('run-btn').addEventListener('click', runTests)
+		document.getElementById('chapter-select').addEventListener('change', (e) => {
+			const chapterNum = parseInt(e.target.value)
+			if (chapterNum) {
+				const firstInChapter = challenges.find(c => c.chapter === chapterNum)
+				if (firstInChapter) window.location.hash = firstInChapter.id
+			} else {
+				window.location.hash = ''
+			}
+		})
+
+		initEditor(challenge)
+	}
+
+	function initEditor(challenge) {
+		const container = document.getElementById('editor-container')
+		const savedCode = localStorage.getItem(`lambda-challenge-${challenge.id}`)
+		const initialCode = savedCode || challenge.starterCode
+
+		const textarea = document.createElement('textarea')
+		textarea.id = 'code-editor'
+		textarea.className = 'code-editor'
+		textarea.value = initialCode
+		textarea.spellcheck = false
+		textarea.placeholder = 'Write your solution here...'
+
+		textarea.addEventListener('input', () => {
+			localStorage.setItem(`lambda-challenge-${challenge.id}`, textarea.value)
+		})
+
+		container.appendChild(textarea)
+		editor = { getValue: () => textarea.value }
+
+		textarea.addEventListener('keydown', (e) => {
+			if (e.key === 'Tab') {
+				e.preventDefault()
+				const start = textarea.selectionStart
+				const end = textarea.selectionEnd
+				textarea.value = textarea.value.substring(0, start) + '\t' + textarea.value.substring(end)
+				textarea.selectionStart = textarea.selectionEnd = start + 1
+			}
+			if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+				e.preventDefault()
+				runTests()
+			}
+		})
+	}
+
+	function runTests() {
+		if (!currentChallenge || !editor) return
+		const userCode = editor.getValue()
+		const results = []
+
+		for (const test of currentChallenge.tests) {
+			try {
+				results.push(runSingleTest(userCode, test, currentChallenge))
+			} catch (error) {
+				results.push({ passed: false, description: test.description, error: error.message })
+			}
+		}
+
+		renderTestResults(results)
+
+		if (results.every(r => r.passed) && !completedChallenges.has(currentChallenge.id)) {
+			completedChallenges.add(currentChallenge.id)
+			localStorage.setItem('lambda-challenges-completed', JSON.stringify([...completedChallenges]))
+			showSuccessMessage()
+		}
+	}
+
+	function runSingleTest(userCode, test, challenge) {
+		const exportName = challenge.exportName
+		const preludeCode = Object.entries(prelude)
+			.filter(([name]) => name !== exportName)
+			.map(([name, fn]) => `const ${name} = ${fn.toString()}`)
+			.join('\n')
+
+		let testCode
+		if (test.custom) {
+			const setup = test.customSetup || ''
+			testCode = `${preludeCode}\n${userCode}\n${setup}\nreturn (${test.custom})`
+		} else if (test.args !== undefined) {
+			const argsStr = test.args.map(a => JSON.stringify(a)).join(')(')
+			testCode = `${preludeCode}\n${userCode}\nconst __result = ${exportName}(${argsStr})\nreturn __result === ${JSON.stringify(test.expected)}`
+		}
+
+		const fn = new Function(testCode)
+		return { passed: !!fn(), description: test.description }
+	}
+
+	function renderTestResults(results) {
+		document.getElementById('test-results').innerHTML = `
+			<h3>Test Results</h3>
+			${results.map(r => `
+				<div class="test-item">
+					<span class="test-icon ${r.passed ? 'pass' : 'fail'}">${r.passed ? '&#10003;' : '&#10007;'}</span>
+					<div>
+						<span class="test-description">${r.description}</span>
+						${r.error ? `<div class="test-error">${r.error}</div>` : ''}
+					</div>
+				</div>
+			`).join('')}
+		`
+	}
+
+	function showSuccessMessage() {
+		const toolbar = document.querySelector('.editor-toolbar')
+		const successDiv = document.createElement('div')
+		successDiv.className = 'challenge-complete'
+		successDiv.innerHTML = `<h3>Challenge Complete!</h3><p>Great work! You've mastered this concept.</p>`
+		toolbar.parentNode.insertBefore(successDiv, toolbar.nextSibling)
+		setTimeout(() => {
+			successDiv.style.opacity = '0'
+			successDiv.style.transition = 'opacity 0.5s'
+			setTimeout(() => successDiv.remove(), 500)
+		}, 3000)
+	}
+
+	init()
+	</script>
 </body>
 </html>
