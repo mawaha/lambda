@@ -379,6 +379,10 @@ transform([1, 2, 3, 4, 5, 6, 7, 8]);</code></pre>
 
 	<h2>Interactive Arithmetic Calculator</h2>
 
+	<div class="info-box">
+		<strong>Note:</strong> Power is limited to exponents ≤ 3 because Church numeral exponentiation performs a^b function applications. Even 5^5 = 3,125 nested calls!
+	</div>
+
 	<div id="widget-calculator"></div>
 
 	<h2>Subtraction (Advanced)</h2>
@@ -631,7 +635,7 @@ const EQ = a => b => And(LEQ(a)(b))(LEQ(b)(a))</code></pre>
 					'Add': toInt(Add(churchA)(churchB)),
 					'Multiply': toInt(Multiply(churchA)(churchB)),
 					'Subtract (a-b)': toInt(Subtract(churchA)(churchB)),
-					'Power (a^b)': b <= 3 ? toInt(Power(churchA)(churchB)) : 'Too large'
+					'Power (a^b)': b <= 3 ? toInt(Power(churchA)(churchB)) : `Exponent > 3 too slow (${a}^${b} = ${Math.pow(a,b)} operations!)`
 				}
 			}
 		})
