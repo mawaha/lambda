@@ -56,7 +56,7 @@ h1 {
 	font-size: 2em;
 	padding-bottom: 0.3em;
 	border-bottom: 2px solid #4834d4;
-	color: #4834d4;
+	color: var(--text);
 }
 
 h2 {
@@ -496,6 +496,19 @@ p {
 
 .widget-result {
 	margin-top: 12px;
+}
+
+/* Front cover image */
+.frontcover {
+	text-align: center;
+	margin: 32px 0;
+}
+
+.frontcover img {
+	width: 100%;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: var(--shadow-md);
 }
 
 /* Responsive */
