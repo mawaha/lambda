@@ -74,6 +74,10 @@ const [quotient, remainder] = divMod(17, 5);</code></pre>
 
 	<pre><code>const Nil = Pair(False)(False)</code></pre>
 
+	<div class="info-box">
+		<strong>Why Pair(False)(False)?</strong> Nil uses False for both elements to signal "no head" and "no tail". This choice works with our <code>isEmpty</code> function: when we fold over an empty list, we get True (our base case), while non-empty lists return False. Any pair of values would work as a sentinel, but False conveys the semantic meaning of "nothing here".
+	</div>
+
 	<h3>Visual Representation</h3>
 
 	<div class="info-box">
