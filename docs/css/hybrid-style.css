@@ -361,8 +361,8 @@ p {
 .chapter-card:nth-child(3) h3::before { content: "🔢"; }
 .chapter-card:nth-child(4) h3::before { content: "📦"; }
 .chapter-card:nth-child(5) h3::before { content: "🔄"; }
-.chapter-card:nth-child(6) h3::before { content: "🚀"; }
-.chapter-card:nth-child(7) h3::before { content: "♾️"; }
+.chapter-card:nth-child(6) h3::before { content: "♾️"; }
+.chapter-card:nth-child(7) h3::before { content: "🚀"; }
 
 .chapter-card p {
 	margin-bottom: 0;
