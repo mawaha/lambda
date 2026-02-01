@@ -269,7 +269,10 @@ const inc = () => ++count;
 		</div>
 	</div>
 
-	<h3>Why It Matters in JavaScript</h3>
+	<details style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0;">
+	<summary style="cursor: pointer; font-weight: 600; color: #6c5ce7;">Deep Dive: Referential Transparency in Practice (click to expand)</summary>
+
+	<h3 style="margin-top: 20px;">Why It Matters in JavaScript</h3>
 
 	<p>Referential transparency enables powerful optimizations and reasoning:</p>
 
@@ -344,6 +347,8 @@ Date.now()            // Different every time
 user.input()          // Depends on user action</code></pre>
 
 	<p>In pure lambda calculus, all expressions are referentially transparent. In JavaScript, we choose when to break this for pragmatic reasons (I/O, randomness), but we isolate these effects to maintain reasoning about most of our code.</p>
+
+	</details>
 
 	<h2>Beta Reduction: Evaluation</h2>
 
