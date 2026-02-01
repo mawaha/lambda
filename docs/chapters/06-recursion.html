@@ -88,11 +88,31 @@ function findInObject(obj, key) {
 
 	<h3>Why Thunks?</h3>
 
-	<p>Without thunks, the If statement would eagerly evaluate both branches, causing infinite recursion even when n is zero. Thunks delay evaluation until we explicitly call them with <code>()</code>.</p>
+	<p>JavaScript evaluates function arguments <em>before</em> calling the function. Without thunks, both branches of If would evaluate immediately - causing infinite recursion!</p>
+
+	<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+		<div style="background: #ffebe9; padding: 15px; border-radius: 8px; border: 2px solid #dc3545;">
+			<h4 style="margin: 0 0 10px 0; color: #dc3545;">✗ Without Thunks (Broken)</h4>
+			<pre style="margin: 0; font-size: 13px;"><code>If(isZero(n))
+  (One)                    // Evaluates
+  (Multiply(n)(Factorial(  // Evaluates!
+    Decrement(n))()))      // Even when n=0!</code></pre>
+			<p style="margin: 10px 0 0 0; font-size: 13px; color: #721c24;">Both branches evaluate immediately → infinite loop</p>
+		</div>
+		<div style="background: #d4edda; padding: 15px; border-radius: 8px; border: 2px solid #28a745;">
+			<h4 style="margin: 0 0 10px 0; color: #28a745;">✓ With Thunks (Works)</h4>
+			<pre style="margin: 0; font-size: 13px;"><code>If(isZero(n))
+  (() => One)              // Just a function
+  (() => Multiply(...))    // Just a function
+  ()  // ← Call the winner!</code></pre>
+			<p style="margin: 10px 0 0 0; font-size: 13px; color: #155724;">Only the chosen branch executes</p>
+		</div>
+	</div>
 
 	<div class="info-box">
-		<strong>Thunk:</strong> A function that takes no arguments and delays computation until called.
-		<pre><code>() => expression  // Thunk - won't evaluate until called</code></pre>
+		<strong>Thunk:</strong> A zero-argument function that wraps an expression, delaying its evaluation until called.
+		<pre style="margin: 10px 0 0 0;"><code>const eager = expensive()      // Runs immediately
+const lazy = () => expensive() // Waits until lazy() is called</code></pre>
 	</div>
 
 	<h3>Thunks in JavaScript</h3>
