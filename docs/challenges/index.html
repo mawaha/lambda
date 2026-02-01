@@ -284,6 +284,10 @@
 	// Application Logic
 	// ============================================
 
+	function escapeHtml(str) {
+		return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+	}
+
 	let currentChallenge = null
 	let editor = null
 	let completedChallenges = new Set(JSON.parse(localStorage.getItem('lambda-challenges-completed') || '[]'))
@@ -524,7 +528,7 @@
 					<span class="test-icon ${r.passed ? 'pass' : 'fail'}">${r.passed ? '&#10003;' : '&#10007;'}</span>
 					<div>
 						<span class="test-description">${r.description}</span>
-						${r.error ? `<div class="test-error">${r.error}</div>` : ''}
+						${r.error ? `<div class="test-error">${escapeHtml(r.error)}</div>` : ''}
 					</div>
 				</div>
 			`).join('')}
