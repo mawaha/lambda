@@ -184,7 +184,20 @@ fib(n) = fib(n-1) + fib(n-2)</code></pre>
 		)
 	)</code></pre>
 
-	<p>Fibonacci has two base cases (n=0 and n=1) and the recursive case sums the two previous values.</p>
+	<h3>Why Two Base Cases?</h3>
+
+	<p>Unlike factorial (which only needs n=0), Fibonacci needs <strong>two</strong> base cases because the recursive formula looks back <em>two</em> steps:</p>
+
+	<div class="info-box">
+		<strong>fib(n) = fib(n-1) + fib(n-2)</strong><br><br>
+		If we only had one base case (n=0), then fib(1) would try to compute fib(0) + fib(-1) — but there's no fib(-1)!<br><br>
+		With two base cases:
+		<ul style="margin: 10px 0 0 0;">
+			<li><strong>fib(0) = 0</strong> — stops recursion when we reach 0</li>
+			<li><strong>fib(1) = 1</strong> — stops recursion when we reach 1</li>
+		</ul>
+		Now fib(2) = fib(1) + fib(0) = 1 + 0 = 1 ✓
+	</div>
 
 	<div id="demo-fibonacci"></div>
 
