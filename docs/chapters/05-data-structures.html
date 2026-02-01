@@ -139,11 +139,11 @@ const [quotient, remainder] = divMod(17, 5);</code></pre>
 		</div>
 	</div>
 
-	<h2>The Append Function</h2>
+	<h2>The Cons Function</h2>
 
-	<p>Append prepends an element to the front of a list:</p>
+	<p><strong>Cons</strong> (short for "construct") prepends an element to the front of a list. This is the standard name in functional programming, originating from Lisp:</p>
 
-	<pre><code>const Append = head => list => f => x => f(head)(list(f)(x))</code></pre>
+	<pre><code>const Cons = head => list => f => x => f(head)(list(f)(x))</code></pre>
 
 	<p>This creates a new list with the head element followed by the existing list.</p>
 
@@ -151,9 +151,9 @@ const [quotient, remainder] = divMod(17, 5);</code></pre>
 
 	<h3>Building a List</h3>
 
-	<pre><code>const list1 = Append(One)(Nil)           // [1]
-const list2 = Append(Two)(list1)          // [2, 1]
-const list3 = Append(Three)(list2)        // [3, 2, 1]</code></pre>
+	<pre><code>const list1 = Cons(One)(Nil)           // [1]
+const list2 = Cons(Two)(list1)          // [2, 1]
+const list3 = Cons(Three)(list2)        // [3, 2, 1]</code></pre>
 
 	<div id="demo-build-list"></div>
 
@@ -171,7 +171,7 @@ const [head, ...tail] = [1, 2, 3, 4];
 // Second(list) = tail
 
 // Immutable list operations (React/Redux style)
-const newArray = [newItem, ...oldArray];  // Prepend (like Append!)
+const newArray = [newItem, ...oldArray];  // Prepend (like Cons!)
 const [first, ...rest] = array;           // Head/tail split
 
 // Recursive array processing (functional style)
@@ -203,7 +203,7 @@ function sum(arr) {
 
 	<pre><code>const Tail = list => First(
 	list(
-		a => b => Pair(Second(b))(Append(a)(Second(b)))
+		a => b => Pair(Second(b))(Cons(a)(Second(b)))
 	)(Nil)
 )</code></pre>
 
@@ -251,7 +251,7 @@ function processList(list) {
 	<div class="exercise-box">
 		<h3>Exercises</h3>
 		<ol>
-			<li>Create a list [4, 5, 6] using Append and Nil</li>
+			<li>Create a list [4, 5, 6] using Cons and Nil</li>
 			<li>What is Head(Tail([1, 2, 3]))?</li>
 			<li>What is isEmpty(Nil)?</li>
 			<li>What happens when you call Head(Nil)?</li>
@@ -274,7 +274,7 @@ function processList(list) {
 
 	<ul>
 		<li>Lists are nested pairs terminating in Nil</li>
-		<li>Append adds an element to the front of a list</li>
+		<li>Cons adds an element to the front of a list</li>
 		<li>Head extracts the first element</li>
 		<li>Tail returns the rest of the list</li>
 		<li>isEmpty checks if a list is empty</li>
@@ -288,7 +288,7 @@ function processList(list) {
 
 	<script type="module">
 		import { Pair, First, Second, One, Two, Three, Four, Five, True, False } from '../lib/lamb.js'
-		import { Append, Head, Tail, isEmpty, Nil } from '../lib/data.js'
+		import { Cons, Head, Tail, isEmpty, Nil } from '../lib/data.js'
 		import { toInt, toBoolean, toArray } from '../lib/utils.js'
 		import { InteractiveDemo } from '../js/interactive.js'
 		import { ListVisualizer } from '../js/visualizer.js'
@@ -305,31 +305,31 @@ function processList(list) {
 			`
 		})
 
-		// Append demo
+		// Cons demo
 		demo.registerDemo('demo-append', () => {
-			const list1 = Append(One)(Nil)
-			const list2 = Append(Two)(list1)
+			const list1 = Cons(One)(Nil)
+			const list2 = Cons(Two)(list1)
 			return `
-				const list1 = Append(One)(Nil)<br>
+				const list1 = Cons(One)(Nil)<br>
 				toArray(list1) = [${toArray(list1)}]<br>
 				<br>
-				const list2 = Append(Two)(list1)<br>
+				const list2 = Cons(Two)(list1)<br>
 				toArray(list2) = [${toArray(list2)}]
 			`
 		})
 
 		// Build list demo
 		demo.registerDemo('demo-build-list', () => {
-			const list = Append(Three)(Append(Two)(Append(One)(Nil)))
+			const list = Cons(Three)(Cons(Two)(Cons(One)(Nil)))
 			return `
-				Append(Three)(Append(Two)(Append(One)(Nil)))<br>
+				Cons(Three)(Cons(Two)(Cons(One)(Nil)))<br>
 				Result: [${toArray(list)}]
 			`
 		})
 
 		// Head demo
 		demo.registerDemo('demo-head', () => {
-			const list = Append(Five)(Append(Four)(Append(Three)(Nil)))
+			const list = Cons(Five)(Cons(Four)(Cons(Three)(Nil)))
 			const h = Head(list)
 			return `
 				const list = [${toArray(list)}]<br>
@@ -339,7 +339,7 @@ function processList(list) {
 
 		// Tail demo
 		demo.registerDemo('demo-tail', () => {
-			const list = Append(Five)(Append(Four)(Append(Three)(Nil)))
+			const list = Cons(Five)(Cons(Four)(Cons(Three)(Nil)))
 			const t = Tail(list)
 			return `
 				const list = [${toArray(list)}]<br>
@@ -349,7 +349,7 @@ function processList(list) {
 
 		// isEmpty demo
 		demo.registerDemo('demo-isempty', () => {
-			const list = Append(One)(Nil)
+			const list = Cons(One)(Nil)
 			return `
 				isEmpty(Nil) = ${toBoolean(isEmpty(Nil))}<br>
 				isEmpty([${toArray(list)}]) = ${toBoolean(isEmpty(list))}
@@ -370,8 +370,8 @@ function processList(list) {
 				{ name: 'c', label: 'Element 3', type: 'number', default: 3, min: 0, max: 10 }
 			],
 			compute: ({ a, b, c }) => {
-				// Build list from user inputs (Append prepends)
-				const list = Append(a)(Append(b)(Append(c)(Nil)))
+				// Build list from user inputs (Cons prepends)
+				const list = Cons(a)(Cons(b)(Cons(c)(Nil)))
 
 				return {
 					'List': `[${a}, ${b}, ${c}]`,

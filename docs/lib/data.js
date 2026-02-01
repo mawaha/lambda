@@ -8,7 +8,7 @@ import { Id } from './combinators.js'
 const Nil = Pair (False) (False)
 
 // λalfx.fa(lfx)
-const Append = head => list => f => x => f (head) ( list (f) (x) )
+const Cons = head => list => f => x => f (head) ( list (f) (x) )
 
 // λl.l(λab.a)(any expression)
 const Head = list => list(a => b => a)(Id)
@@ -18,7 +18,7 @@ const Tail = list => First (
 					list (
 						a => b => Pair
 							(Second (b))
-							(Append (a) (Second(b)))
+							(Cons (a) (Second(b)))
 						)
 						(Nil)
 					)
@@ -28,7 +28,7 @@ const isEmpty = list => list
 					( True )
 
 export {
-	Append,
+	Cons,
 	Head,
 	Tail,
 	isEmpty,
