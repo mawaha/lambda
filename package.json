@@ -2,10 +2,10 @@
   "name": "lambda",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "code-examples/index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "node tests.js"
+    "start": "node code-examples/index.js",
+    "test": "node code-examples/tests.js"
   },
   "keywords": [
     "lambda",
